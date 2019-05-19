@@ -1,0 +1,17 @@
+question description:
+	taglib definiton not consitent with specification version
+solution:
+	在把taglib标签的内容添加到jsp-config标签中
+example:
+	before modification:
+	<taglib>
+    		<taglib-uri>/mytallib</taglib-uri>
+   		<taglib-location>/WEB-INF/mytaglib</taglib-location>
+	</taglib>
+	after modification:
+	<jsp-config>
+		<taglib>
+			<taglib-uri>/mytaglib<taglib-uri>
+			<taglib-location>/WEB-INF/mytaglib.tld</taglib-location>
+		</taglib>
+	</jsp-config>

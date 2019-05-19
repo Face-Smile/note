@@ -1,0 +1,408 @@
+第一课
+HTML指的是超文本标记语言
+*.html 是一种文档
+html文档一般以.html结尾
+第二课
+选择合适的开发工具和调试工具
+第三课
+html文档的格式
+<doctype……>
+<html>
+<head>
+</head>
+<body>
+</body>
+</html>
+DACTYPE类型（html标准）
+严格型：stricted.dtd
+过渡型：transitional.dtd
+松散型：frameset.dtd
+<head>里面的内容一般是写给机器看的；
+<body>里面的内容一般是写给人看的。
+第四课 网页布局
+网页制作先从整体着眼，将网页分块
+<tile></tile>：网页标题
+<div></div>：网页分块
+第五课 用CSS控制DIV显示
+div只能表示这里有块地，css控制地的大小和颜色
+div分区命名：<div id="……"></div>
+分块设置：
+<systle>
+	div{
+		height(高度)：单位px;
+		width(宽度)：单位px；
+		background(背景)
+	}（整体分块设置）
+	#……{
+		height(高度)：单位px;
+		width(宽度)：单位px；
+		background(背景)
+	}（特定分块设置）
+css引入方式：
+div声明控制方式：①“id”法②
+第六课 浮动布局
+div没有声明宽度（就算声明）都是独占一行
+浮动布局方式：css控制后加一行“float：right（left）”
+第七课 清除浮动
+清除浮动方式：css控制后加一行“clear：right（left、both）”
+第八课	页面布局
+父div与子div：
+<div>
+	<div></div>（子div）
+</div>
+如果某个div没有设置高度，其后的div分区将不会显示
+第九课	常见错误
+1.不加doctype，导致低版本IE解析效果不一样
+2.id为数字（id等属性值不能为数字）
+3.文件编码与charset声明不一致
+第十课	盒模型
+盒模型：div分区之间有一定距离的排列
+外边距：margin（盒与盒之间的距离）
+盒边框：border(厚度)
+内边距：
+第十一课  盒模型之margin设置
+div{
+	margin（全部边距）:100px;
+	margin-top（上边距）:100px;
+	margin-bottom（下边距）:100px;
+	margin-left（左边距）:100px;
+	magin-right（右边距）:100px;
+	margin:10px 20px 30px 40px;(依次表示的是上、右、下、左的边距；如果只有两个或者三个像素宽，对应的像素按照上面的顺序对应，没有的则与对边距一样)
+}
+第十二课  margin首页实战
+<div class="leibie"></div>
+<div class="leibie"></div>
+<div class="leibie"></div>
+<div class="leibie"></div>
+表示四个相同类别的div
+第十三课  盒模型之border设置
+盒子border 3要素：宽(border-width)、形状(border-style)、颜色(border-color)
+div{
+	width:300px;
+	height:300px;
+	background:blue;
+	border:20px solid(边框类别：solid实线、dashed虚线、dotted点线……) green(边框颜色);
+	border-top:20px solid green;
+	……
+}
+第十四课  用css控制border画三角形
+事例：白色背景下绿色三角形
+div{
+	width:0px;
+	height:0px;
+	border-top：50px solid white;
+	border-right：50px solid white;
+	border-bottom：50px solid green;
+	border-left：50px solid white;
+}
+第十五课  padding详解
+三种表示方法
+div{
+	padding:10px;
+	padding-top:10px;
+	padding：10px 20px 30px 40px;
+}
+第十六课  padding与背景
+padding内边距背景色与中心内容的背景色相同
+<style>
+	div{
+		width:200px;
+		height:200px;
+		backgroud:gray;
+		border:10px solid blue;
+		padding:20px;
+	}
+</style>
+注意：当padding的内边距变大时，“盒子”会变大，但是存放内容的像素面积不变（面积为上面所表示的宽度与高度的像素面积）
+第十七课  padding美化首页
+注意：设置padding后，浮动布局注意所有子div的像素宽度和和像素高度和是否小于父div像素高度与像素宽度
+第十八课  盒子模型总结
+<br/>表示换行的意思
+一个盒子的所占面积：
+	高度：height + padding-top + padding-bottom+border-top + border-bottom + margin-top + margin-top + margin-bottom
+	宽度： width + padding-left + padding-right + border-left + border-right + margin-left + margin-right
+第十九课 利用margin实现水平居中
+用css控制父div实现整个页面水平居中
+示例：(1080分辨率)
+	#container{
+		width:1000px;
+		height:2000px;
+		margin: 0px auto;
+		background :blue;
+	}
+即用auto来实现水平居中
+第二十课  margin重叠现象研究
+含义：上下相邻的普通元素，上下边距，并非简单的相加，而是取其中较大的边距值
+margin重叠的发生条件及现象：
+
+
+
+
+“父子div”也会发生margin重叠，代码示例：
+第二十一课 inline内联（行内元素）
+内联元素只在行内发挥作用
+块状元素与内联元素的区别
+	   独占一行  能设宽高  竖直方向的margin、padding
+块状元素     是         是       有，可以设置
+内联元素     否         否       没有，也不可设置
+
+内联元素有水平方向的margin、padding。
+内联元素：span
+块状元素：div
+第二十二课 内联与块状的转化
+css控制 display：block（块状）、inline（内联）、none（什么都不是，其不占用页面空间）……
+示例（内联转为块状）：
+<style>
+	span{
+		width: 200px;
+		height: 200px;
+		background:blue;
+		display:block;
+	}
+</style>
+第二十三课 用css控制段落
+<p></p>:表示一个段落
+text-indent:表示首行缩进，后接缩进像素距离
+text-align：表示文字方向，有居左、居右、局中，后接方向词
+text-decoration：none（无）、underline（下划线）、overline（上划线）、line-through（中划线）、blink……
+letter-spacing：控制字符距离
+第二十四课  文字控制
+color（颜色控制）：后接颜色英文单词；
+font-style（文字形态）：italic（斜体）；
+font-weight（字重）：bold（粗体）；
+font-size（文字大小）：23px；
+line-height（行高）：46px；
+font-family（字体）："SimSun"（新宋）、"SimHei"（黑体）……
+后面五个可以一起表示为：
+font：italic bold 23px/46px "SimHei";(注意顺序不可改变，“/”不能省略)
+font-align：center；（表示字体水平居中）
+第二十五课 字体深入讲解
+字体种类：有衬线字体（serif）、无衬线字体（sans-serif）
+注意：你所设置的字体，客户机器上未必有如果没有，则使用默认字体
+font-family：‘微软雅黑’，‘黑体’，sans-serif；系统会按照顺序适配字体，如果没有，则随便使用一个无衬线字体
+第二十六课 用css控制背景图片
+<style>
+	body{
+		background-color:blue;
+		background-url:(图片名字);
+		background-repeat：no-repeat(不重复)/x-repeat（横向重复）/y-repeat（纵向重复）
+		background-attachment：fixed;(图片位置固定)
+	}
+</style>
+第二十七课 精准控制图片位置
+background-position:后接位置英文或者像素位置，位置先水平后竖直
+多个div如何共用一个背景图片：对正div调整背景图片的位置
+第二十八课  精准控制背景图片位置
+background-position:后接位置英文或者像素位置，位置先水平后竖直
+多个div如何共用一个背景图片：对正div调整背景图片的位置
+计算机是以左上角为原点的，向下、向左为正
+设置背景图片：background-image：url(图片全名，包括后缀，此时图片地址必须在和html文档相同的位置)
+背景如何连着设置：background：背景颜 背景图片位置 是否重复  是否固定 位置(不写可以跳过)
+第二十九课 css选择器
+种类：id选择器、class选择器、标签选择器、派生选择器。
+div id控制器：#加名称
+div class控制器：.加名称
+div div控制器：控制所有的div分块
+div p {
+     color：red;
+}(表示控制div下的p标签)
+第二十九课 css优先级
+控制越精细，优先级越高
+第三十课 css四种引入方式
+1、外部链接一个css文件，我们在html头部分标明：<link href="css/my.css" rel="stylesheet" type="text/css"/>
+2、头部直接写入css：<style type="text/css">div{margin:0;padding:0;border:1px solid red}</style>
+3、外接多个css文件时：<style type="text/css">@import url（my.css）;</style>
+4、直接在html标签里写入对这个标签的css控制，如：<div style="border:1px solid red">测试信息</div>
+第三十一课 css初始化
+默认这个<li></li>显示出的文字前面有个小黑点
+相同的元素，如li，在不同的浏览器下，显示效果稍有不同，是因为浏览器对个元素的margin、border、padding、font-size等略有不同，想要杜绝，我们可以通过css让所有元素的属性值都一样，这样浏览器显示效果就一致了，减少了不兼容情况的发生。
+第三十二课 html学习思维导图
+html结构：doctype、head、body
+div布局：布局原则、盒子模型、浮动布局
+css效果：选择器（id、类选择器、标签、派生选择器、伪类选择器、通配选择器）、控制效果（段落控制、文字控制、背景控制）、引入方式（页内style标签、外部css文件、行内style标签、import导入）、初始化
+html标签：无语义标签（div、span）、有语义标签（h1-h6标题、p段落、img图片、embed视屏、a超链接和锚点、ul无序列表、ol有序列表、table表格）
+第三十三课 h标签和p标签
+只有h1-h6标签，字体大小依次减小，其余都不是标题，相当于默认字体大小的文字
+p表示段落，在新闻网站中，h于p经常一起出现。
+第三十三课 img图片标签
+img标签是自闭和标签
+用法：<img src="后接图片全称，包括后缀，且图片放在本层目录，如果图片在上层目录，就在图片名称前加../  ,如果为网站图片，则直接写图片网址" alt="图片内容概括，可写可不写" title="鼠标放上去就显示" />
+第三十五课 图片是内联元素还是块状元素
+img是一个特殊的内联元素，同时是替换元素，替换元素能设置宽和高
+图片和div分区之间会有一个border边框，需将图片转换为块状元素（display：block；）
+第三十六课 有序列表和无序列表
+无序列表：<ul></ul>
+无序列表所显示的文字前面的符号类型设置：
+list-style-type：disc（默认值，实心圆）、circle（空心圆）、square（实心方块）……
+
+有序列表：<ol></ol>
+有序列表所显示的文字前面的符号类型设置：
+list-style-type：upper-roman（罗马数字）……（默认为阿拉伯数字）
+一般设置为none，防止不同的浏览器兼容性不同。
+真正做这个一般设置背景图片来显示这个。
+第三十七课  整齐的表格
+表格标签：<table></table>
+行：<tr></tr>
+列：<td></td>
+表格设置边框（css控制）：td{border：1px solid blue；}（此时是一个个独立的小格子）
+如需设置成一个有表格线的表格（css控制）：
+table{border-collapse：collapse}
+border-spacing：20px；（控制小格子的距离）
+合并单元格：1、合并行单元格：<td colspan="数字（合并格数）"></td>
+2、合并竖单元格：<td rowspan="数字（合并格数）"></td>
+第三十八课 超链接
+链接标签：a
+<a href="链接网址" target="_blank"(写这个，表示这个网页在新窗口打开，不加则在原窗口打开) title="鼠标放在这里就显示">文字</a>
+第三十九课 锚点
+锚点就像打了一个标记
+<a name="名称"></a>
+如果想访问网页上某个标记处的位置，即在网址后面加“#名称”
+第四十课  css伪类
+伪类：只要是指a标签的伪类
+css允许我们针对a标签的4种状态设置各自的css特性，叫做css伪类
+css控制：
+a:link{color:gray}（原本的颜色,a:link可以简写为a）
+a:visited{color：black}（点击过的网页的颜色）
+a:hover{color:orange}(放上去一瞬间的颜色)
+a:active{color：blue}（点击那一瞬间的颜色）
+注意：顺序不能变，最后一种一般不写
+
+第四十一课 字符字体
+在hml开发中，有一些字符，不适合直接写出，如大于号和小于号……
+一般格式：& + 实体名 + ；
+&(&amp)、>(&gt)、<(&lt)、"(&quot)、￥(&yen)、版权符号（&copy）……
+第四十二课   公司网站开发之首页布局
+从大到小，先布局div分块，在进行css控制
+
+第四十三课  公司网站开发之导航
+注意适当的时候进行块状和内联的转化
+text-align：center；（表示字体水平居中）
+第四十四课  公司网站开发之main区域（1）
+先巨调，最后微调
+第四十五课  公司网站开发之main区域（2）
+第四十六课  footer区域开发
+利用行高来使文字居中
+第四十七课  文本颜色微调
+第四十八课  行高与文字竖直居中
+将行高设置成与所要显示文字竖直居中分块的高度，即可实现文字的竖直居中
+第四十九课  IE浏览器bug及兼容测试
+字体不能默认，应设置字体大小
+字体颜色应该设置不能默认
+IE浏览器出现bug的几种常见原因：
+1、没有使用正确的doctype（正确声明doctype）
+2、各浏览器对不同标签的初始值不同（css初始化）
+3、自身书写不规范引起
+4、浏览器bug引起
+（如：IE浏览器中，左浮元素，左margin是定义的2倍；右浮，右margin是定义的2倍  解决方法：加 _display:inline
+不认识a:link解决方法：不加:link
+3像素margin bug 解决方法：规范浮动与清除浮动）
+第五十课 色彩的表示
+1、颜色用数字表示
+2、颜色有3种原色组成的，红、绿、蓝
+3、3种原色各在【0-255】之间变化
+综上：本质是组合三原色
+1、用16进制组合【00-FF】，#234567
+2、用十进制来组合，如rgb（34，45，89）；
+3、html提供常用颜色的名称，如orange，pink……
+4、#EEEEEE可简写为#EEE，当六个字符一样时，可以简写为三个字符。
+第五十一课  尺寸的表示
+块状子元素要是不说宽度，默认占满父元素的宽度
+可以用百分比来表示子div的大小，其是相对父div来说的
+em是相对大小，是指其父元素中1个“M”的大小，简单理解为父元素的font-size就是1个em单位
+第五十二课  css画圆角
+用border-radius属性来控制
+例：画圆角
+div{
+	width:300px;
+	height:300px;
+	border:1px solid blue;
+	border-radius:15px;
+}
+第五十三课  相对定位与绝对定位
+相对定位是指元素在其正常的位置，偏移某些像素
+p标签默认有margin、padding
+例:相对定位，相对左边和顶部20像素
+div{
+	width：100px;
+	height:100px;
+	background:blue;
+	position:relative;
+	top:20px;
+	left:20px;
+}
+绝对定位是指相对于父元素的top、left、right、bottom来定位。
+例子
+div{
+	width：100px;
+	height:100px;
+	background:blue;
+	position:absolute;
+	top:20px;
+	left:20px;
+}
+用绝对定位时，父元素要求有position属性才行，否则将依据父的父的父的，一直到body，哪个祖先有position属性，相对哪个祖先，如果没有则相对body。
+绝对定位不占用父元素的位置，谁的高的越高，谁就覆盖谁。
+高度设置：z-index：1000；如果没有设置则后面的覆盖前面的。
+第五十四课 overflow溢出
+文字大于分区范围，如果想隐藏可以这样设置：
+overflow:hidden;
+默认为（溢出）：
+overflow:visible;
+如果不想隐藏，又想查看内容，可以这样设置：
+overflow:scroll;(滚动条，东西多不多都加条)
+overflow:auto;（滚动条，东西不多则不加条）
+定义特别小的元素时，要加overflow:hidden;防止老实浏览器出bug。
+第五十五课  表单
+需要把用户信息填写并提交，这是需要表单来收集用户信息
+type为文本类型
+radio为单项选择
+checkbox为多项选择
+select为选择项选择
+		<div>
+			<form action="网址" method="post"(传送方式，此处为秘密传送)>
+				<p>
+					用户名：<input type="text"  name="username" v alue="默认值"/>
+				</p>
+				<p>
+					密码：<input type="password" name="password"/>
+				</p>
+				<p>
+					性别：男<input type="radio" name="sex" value="默认值"/>
+					女<input type="radio" name="sex" value="默认值"/>
+				</p>
+				<p>
+					爱好:篮球<input type="checkbox" name="hoby" value="默认值"/>
+					足球<input type="checkbox" name="hoby" value="默认值"/>
+				</p>
+				<p>
+					<select name="学历" id="">
+						<option value="大学">大学</option>
+						<option value="高中">高中</option>
+						<option value="初中">初中</option>
+					</select>
+				</p>
+				<p>
+					<textarea name="intro" id="jieshao" cols="30" rows="10"></textarea>
+				</p>
+				<p>
+					上传头像: <input type="file" name="pic"/>
+				</p>
+				<p>
+					隐藏域:你看不见<input type="hidden" name="" value=""/>
+				</p>
+				<p>
+					<input type="submit" value="提交"/>
+				</p>
+
+			</form>
+		</div>
+第五十六课  框架集
+标签：frame
+屏蔽一段语句:<!--    内容   -->
+下面的*表示余下的都给他
+rows表示分成几行
+cols表示分成几列
+<frameset rows="200px/30%,*">
+	<frame src="网页名称"></frame>
+</frameset>
+
