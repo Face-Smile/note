@@ -1,0 +1,871 @@
+脚本语言的第一行，目的就是指出，你想要你的这个文件中的代码用什么可执行程序去运行它，就这么简单
+#!/usr/bin/Python是告诉操作系统执行这个脚本的时候，调用/usr/bin下的python解释器；
+#!/usr/bin/env python这种用法是为了防止操作系统用户没有将python装在默认的/usr/bin路径里。当系统看到这一行的时候，首先会到env设置里查找python的安装路径，再调用对应路径下的解释器程序完成操作。
+#!/usr/bin/python相当于写死了python路径;
+#!/usr/bin/env python会去环境设置寻找python目录,推荐这种写法
+
+
+
+cmd使用Python方法：进入cmd窗口，输入python，如果提示不是内部或者外部的命令，打开环境变量，选择path，在末尾添加“:+Python的详细安装路径”.
+输出：print(当输出的字符串含有中文的时候，windows要在语句前加“# coding:gbk”mac和ulinux用“# coding:utf-8”)
+输出：input/raw_input,raw_input所有的输入都会当做字符来处理。print中输入，表示一个空格。
+数据类型：字符、整形、浮点数、bool。bool只有两个（True、False注意大小写）。
+字符串输出：
+print "answer is ",20
+print "answer is " + "20"
+print "answer is " + str(20)
+print "answer is %d" % 20
+输出结果为answer is 20
+print "name is %s" % "crossin"
+输出结果为name is crossin
+print "Yeah,it's true,",
+print "you are very good"
+输出结果为Yeah,it's true, you are very good（其中第一条语句最后的逗号表示不换行输出下一条语句）
+给s赋值多个值，并输出（用单引号和双引号都可以）
+
+>>> s='''
+123
+456
+789
+'''
+>>> print s
+
+函数的定义
+def 函数名：
+​	函数语句
+全局变量声明：
+在变量定义前加“global”
+123
+456
+789
+
+类型转换：type(变量名)查看变量类型
+int(x) #把x转换成整数
+float(x) #把x转换成浮点数
+str(x) #把x转换成字符串
+bool(x) #把x转换成bool值
+>>> bool(-123)
+True
+>>> bool(0)
+False
+>>> bool('abc')
+True
+>>> bool('False')
+True
+>>> bool('')
+False
+在python中，以下数值会被认为是False：
+   为0的数字，包括0，0.0
+   空字符串，包括''，""
+   表示空值的None
+   空集合，包括()，[]，{}
+其他的值都认为是True。
+None是python中的一个特殊值，表示什么都没有，它和0、空字符、False、空集合都不一样。
+
+循环
+if条件使用：
+if 满足条件：
+​	执行语句1
+elif 满足条件：
+​	执行语句2
+else：
+​	执行语句3
+执行语句应于if、elif、else缩进四个字节或者一个tab，多条语句也是如此，无须括号。
+break跳出本层循环
+while 满足条件：
+​	执行语句
+​	if 满足条件：
+​		break
+continue跳出本次循环
+for i in range(1,6)
+​	print i    #表示输出1到5
+for i in range(6)
+​	print i    #表示输出0到5
+数组输出示例：
+nums = [23, 45, 8, 13, 50, 43, 21]
+# 把 nums 里的值从前向后累加
+# 当总和超过 100 时则不再继续累加
+sum = 0
+for n in nums:
+​    # 累加
+​    sum+=n
+​    if sum > 100:
+​        # 满足条件时跳出循环
+​        break
+print sum
+
+import引入模块
+random模块引入方式：
+import random
+random.randint(1,5)
+产生一个1到5的随机数
+其他表示方法
+from radom import randint/*
+randint(1,5)
+random.random()
+除了randint，random模块中比较常用的方法还有：
+生成一个0到1之间的随机浮点数，包括0但不包括1，也就是[0.0, 1.0)。
+random.uniform(a, b)
+生成a、b之间的随机浮点数。不过与randint不同的是，a、b无需是整数，也不用考虑大小。
+
+random.choice(seq)
+从序列中随机选取一个元素。seq需要是一个序列，比如list、元组、字符串。
+random.choice([1, 2, 3, 5, 8, 13]) #list
+random.choice('hello') #字符串
+random.choice(['hello', 'world']) #字符串组成的list
+random.choice((1, 2, 3)) #元组
+
+random.randrange(start, stop, step)
+生成一个从start到stop（不包括stop），间隔为step的一个随机数。start、stop、step都要为整数，且start<stop。
+random.randrange(start, stop, step)其实在效果上等同于
+random.choice(range(start, stop, step))
+
+random.sample(population, k)
+从population序列中，随机获取k个元素，生成一个新序列。sample不改变原来序列。
+
+random.shuffle(x)
+把序列x中的元素顺序打乱。shuffle直接改变原有的序列。
+
+都是可行的用法。
+
+import math
+math包里有两个常量：
+math.pi
+圆周率π：3.141592...
+
+math.e
+自然常数：2.718281...
+
+数值运算：
+math.ceil(x)
+对x向上取整，比如x=1.2，返回2
+
+math.floor(x)
+对x向下取整，比如x=1.2，返回1
+
+math.pow(x,y)
+指数运算，得到x的y次方
+
+math.log(x)
+对数，默认基底为e。可以使用第二个参数，来改变对数的基底。比如math.log(100, 10)
+
+math.sqrt(x)
+平方根
+
+math.fabs(x)
+绝对值
+
+三角函数:
+math.sin(x)
+math.cos(x)
+math.tan(x)
+math.asin(x)
+math.acos(x)
+math.atan(x)
+注意：这里的x是以弧度为单位，所以计算角度的话，需要先换算
+
+角度和弧度互换:
+math.degrees(x)
+弧度转角度
+
+math.radians(x)
+角度转弧度
+
+以上是你平常可能会用到的函数。除此之外，还有一些，这里就不罗列，可以去
+http://docs.python.org/2/library/math.html
+查看官方的完整文档。
+
+在计算机领域有一个特殊的时间，叫做epoch，它表示的时间是1970-01-01 00:00:00 UTC。
+Python中time模块的一个方法
+time.time()
+返回的就是从epoch到当前的秒数（不考虑闰秒）。这个值被称为unix时间戳。
+
+time.sleep(secs)
+
+它可以让程序暂停secs秒。例如：
+
+import time
+print 1
+time.sleep(3)
+print 2
+
+def func(*args)
+这种方式的厉害之处在于，它可以接受任意数量的参数。来看具体例子：
+def calcSum(*args):
+​	sum = 0
+​	for i in args:
+​		sum += i
+​	print sum
+调用：
+calcSum(1,2,3)
+calcSum(123,456)
+calcSum()
+输出：
+6
+579
+0
+
+列表
+Python2中，列表中有中文和其他数字或者字符时，直接输出列表时，不会对列表中的中文进行解码，会原样输出,python3中不会。
+arr=['你好'，3.0]
+print arr
+>>>['\xc4\xe3\xba\xc3', 3.0]
+
+列表arr=[1,2,3,4,5]
+arr[-1]表示倒数第一个数字。
+列表中增加元素:
+①用append添加到列表的最后，如：
+ar.append(6)
+print arr
+>>>[1,2,3,4,5,6]
+②用insert添加到指定位置之后，如：
+arr.insert(4,21)
+print arr
+>>>[1,2,3,4,21,5]
+③用加法，如：
+arr=[6,7,8]
+print arr
+>>>[1,2,3,4,5,6,7,8]
+
+移出列表元素：
+①remove法，remove() 函数用于移除列表中某个值的第一个匹配项。如：
+arr.remove(3)表示移除列表元素为3的元素,如果没有这个元素就会报错。
+②del法，如：
+del arr[2]表示删除列表中第三个元素。
+③pop()函数法，如：
+arr.pop(0)表示移除第一个元素，返回值为该元素的值，没有参数表示移除最后一个。
+
+获取列表的元素个数用len函数，如：
+len(arr)表示获取arr元素的个数。
+
+列表元素排序用sort函数，如：
+arr.sort(reverse=True)或者sorted(arr,reverse=True)表示将列表元素逆排列，除此还有更多种排序。
+arr.sort()或者sorted(arr)表示正序排列。
+sort 函数是在原列表的基础上进行排序，而 sorted 函数则是新建一个列表副本，在副本上进行修改。
+# 对嵌套序列排序
+l = [[1, '学'], [3, '使'], [5, '快'], [2, '习'], [4, '我'], [6, '乐']]
+sorted(l, key=lambda x: x[0])  # 按每项第一个元素排序
+[[1, '学'], [2, '习'], [3, '使'], [4, '我'], [5, '快'], [6, '乐']]
+
+列表切片（arr[%d:%d]）（超出范围不会报错，也可以使用负数位置）
+arr=[1,2,3,4,5,6,7,8,9]
+print arr[1:3]
+>>>[2,3]
+如果省略则表示起始或则结束，如：
+print arr[:3]
+>>>[1,2]
+如果后面的数字小于或等于前面，则输出空列表。
+
+使用负数位置，如
+arr=[1,2,3,4,5]
+print arr[-3:-2]
+>>>[3]
+
+注意下列代码：
+arr0=[2,3,4,5]
+arr=[1,2,3,4,5]
+arr1=arr[:] #①
+arr2=arr0   #②
+del arr[0]
+del arr0[0]
+print arr1
+print arr2
+>>>[1, 2, 3, 4, 5]
+[3, 4, 5]
+①是申请一个副本，改变原列表不会改变副本。
+②是直接等同于原列表，只要原列表改变，另一个也会跟着改变。
+
+列表解析：
+arr = [1,2,3,4]
+[i for i in arr]
+>>>[1,2,3,4]  #此方法相当于创建一个副本
+
+arr = [1,2,3,4]
+[i for i in arr if i>2]
+>>>[3,4]
+
+arr = [1,2,3,4]
+[i*2 for i in arr if i>2]
+>>>[6,8]
+
+函数 split 和 join 可以实现字符串与列表的互相转换,都可以不用变量直接调用。
+split没有参数则通常以制表符\t、换行\n、空格等空白符号作为字符串分割的分隔符
+split可以以多个字符分割，分隔符前面或者后面没有则为空字符。如：
+l='a.b.c.'
+l.split('.')
+print l
+>>>['a','b','c','']
+
+a = 'i love python'
+l = a.split()   # 将字符串转化为列表
+print l
+>>>['i', 'love', 'python']
+b = ' '.join(l)   # 将列表转化为字符串
+print b
+>>>'i love python'
+
+其中，split 函数还可以加上参数，使字符串按给出的参数进行分割：
+a = 'www.crossincode.com'
+l = a.split('.')
+print l
+>>>['www', 'crossincode', 'com']
+
+'aaa'.split('a')
+>>>['','','','']
+
+当然，对指定的字符使用 join 函数，也可以以该字符为分割符组合列表：
+l = ['c:', 'python', 'scripts']
+a = '\\'.join(l)
+prin a
+>>>'c:\\python\\scripts'
+
+ord()函数：返回一个字符串的所有字符。如：
+a = 'there is 120 second in every 2 minute'
+l = [str(x) for x in a if ord(x) in range(ord('a'), ord('z')+1)]
+print l
+输出a中所有的小写字母
+
+字符串同样可以使用索引和切片
+注意：与list不同的是，字符串不能通过索引访问去更改其中的字符。如：
+a = 'your score is 59.'
+a.index('5')
+14
+a[14] = '6'
+TypeError: 'str' object does not support item assignment
+
+sys.getsizeof(s)可以用python的smiley 模块监测所有的内存变量情况,s是参数。
+
+
+字典dict：{键：值，键：值，键：值，...}
+如果想要赋值一个空字典，只需一对大括号就可以了。
+键是唯一的，不能重复，键只能是简单对象，比如字符串、整数、浮点数、bool值。值可以是各种类型，字典的元素是没有顺序的，无法通过检索来访问。
+如果想要访问字典中的一个值，需要通过它的键来访问，如果访问一个不存在的键，就会报错。
+修改某一项的值就直接对其赋值，如果不存在就添加新的键和对应的值。
+删除字典中的一项：
+①del法：
+price={'iphone':6088,'galaxy':5988,'mi':1999}
+del price['galaxy']
+print price
+>>>{'mi': 1999, 'iphone': 6088}
+②has_key(),如：
+price.has_key('iphone')
+
+判断字典中是否存在某个元素用in或则not in，如：
+‘mi’ in price
+>>>True
+keys函数返回字典所有键,values函数返回字典所有值：
+price.keys()
+>>>['mi', 'iphone', 'galaxy']
+ price.values()
+>>>[1999, 6088, 5988]
+items()方法：返回一个包含所有键值的列表
+clear()方法：删除字典中所有项目
+get(key)：返回字典key对应的值
+pop(key):删除字典key对应的值
+update(字典)：将字典中的键值添加到字典中
+
+
+元组tuple：
+brand=（'iphone','galaxy','mi'）
+tuple1 = (1,2,3,4)  # 元组
+tuple2 = (1,'a',[1,2],('a','b'))  # 元组各元素可以是不同数据类型
+元组一旦定义，就不能修改。
+创建一个空元组只需一个小括号，如果元组只有一个元素，必须在这个元素后面加一个逗号，否则程序就会理解为一般的运算。如a=(),a=(3,)
+
+元组支持索引，切片
+not in 是in的相反的结果
+
+集合（set）
+集合也是 Python 内置的一种数据结构，它的概念与运算都与高中数学中的集合十分相像，而形式上则与字典有些类似，都是大括号 {} 包裹。
+a_set = {1,2,3,4}
+set1={1,2,3}
+set2={3,4,5}
+set1 | set2       # 并集
+{1, 2, 3, 4, 5}
+
+set1 & set2       # 交集
+>>>{3}
+
+set1 ^ set2       # 交集在并集中的补集
+>>>{1, 2, 4, 5}
+
+set1 - set2       # 交集在set1中的补集
+>>>{1,2}
+
+string模块：
+string.ascii_letters表示所有大小写字母，string.digits表示字符0~9，例如：
+chars = string.ascii_letters + string.digits
+print chars
+>>>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+
+文件读操作：
+打卡文件：open(...)
+open(name[,mode[,buffering]])
+根据文件名name打开文件，返回一个file对象，如
+open("e:\text.txt")
+读写文件用read(),如：
+f=open("e:\\text.txt")
+f.read()
+>>>输出文本内容
+f.readline():表示读取一行，结果为一行字符串，包括换行符等等。
+f.readlenes():表示读取每一行，结果为每一行所构成的列表，包括换行符等等。
+f.close():表示关闭文件
+for line in f:
+	print line
+其效果与readline()一样，按行读取。
+
+文件读写光标位置移动：seek()函数
+f.seek(0)表示光标位置移到开头处。
+
+文件自动关闭操作：with ...as...
+with open('e:\\text.txt') as f: #其效果等同于f=open("e:\\text.txt")，只是执行完后自动关闭文件
+​	f.read()
+​	f.seek(0)
+​	f.readlines()
+python3中open函数后面多了一个可选文件编码，如：
+f=open('data.txt',encoding='gbk')
+
+文件写操作：
+f=open('txet.txt','w') #只写模式
+write()函数：
+f.write('hello world!')
+文件内容：hello world!
+writelines()函数：#它写入的时候并不会换行，必须加'\n'才会换行，与readlines()对应
+如果在Windows下'\n'不换行的话，尝试用'\r\n'
+with open('e:\\text.txt','w') as f:
+​	f.write('hello')
+​	f.write('world')
+python3中有一个可选文件编码，如：
+f=open('data.txt','w',encoding='uff-8')
+
+
+
+
+
+文件打开模式：
+r:只读模式，默认
+w:只写模式，会先清空文件
+a:追加写入模式，在文件末尾写入，不可读
+r+:读写模式，注意写入位置
+b:二进制模式，与前面几种模式并存
+
+如果文件在程序根目录下的子文件夹内，可以省略根目录后调用
+another_dir\crossin.txt
+如果文件在根目录的上级目录内，可以用 ..\ 返回上级目录
+..\test2\aaa.txt
+在Python中，文件地址是以字符串的形式进行调用
+# 错误示范
+file_address = 'd:\test\temporary\python.txt'
+但是，由于反斜杠 \ 在字符串中有着转义符的功能，所以，简单的将文件地址直接放置在引号内所组成的字符串很可能并不是我们想要的地址。
+print(file_address)
+d:      est     emporary\python.txt
+# \t被转义为制表符
+解决办法有三个：
+# 法一，在字符串引号前加 r 使 反斜杠不转义
+file_address = r'd:\test\temporary\python.txt'
+print(file_address)
+d:\test\temporary\python.txt
+# 法二，使用双反斜杠 \\ 对转义符转义
+file_address = 'd:\\test\\temporary\\python.txt'
+print(file_address)
+d:\test\temporary\python.txt
+# 法三，Windows支持斜杠符 / 分割，系统会自动转为反斜杠
+file_address = 'd:/test/temporary/python.txt'
+print(file_address)
+d:/test/temporary/python.txt
+
+
+异常处理：
+try:
+​	# 可能引发异常的代码
+except:
+​	# 异常处理代码
+else:
+​	# 正常代码处理
+finally:
+​	# 执行完后处理（无论代码正常还是异常）
+
+
+
+
+
+字符串居中显示：
+string1 = "Now I am here."
+print string1.center( 50 )
+print string1.rjust( 50 )
+print string1.rjust( 50 )
+
+
+
+网络请求：
+需引入模块：Python2为：urllib2…  Python3为：urllib.request…
+第三方模块：requests（需自行安装）……
+urlopen（url）打开网址
+读取内容可以用read()函数
+显示下载进度：引入模块urllib，urlretrieve（）函数
+urlretrieve方法
+直接将远程数据下载到本地。
+
+代码如下:
+urllib.urlretrieve(url[, filename[, reporthook[, data]]])
+参数说明：
+url：外部或者本地url
+filename：指定了保存到本地的路径（如果未指定该参数，urllib会生成一个临时文件来保存数据）；
+reporthook：是一个回调函数，当连接上服务器、以及相应的数据块传输完毕的时候会触发该回调。我们可以利用这个回调函数来显示当前的下载进度。
+data：指post到服务器的数据。该方法返回一个包含两个元素的元组(filename, headers)，filename表示保存到本地的路径，header表示服务器的响应头。
+
+下面通过例子来演示一下这个方法的使用，这个例子将新浪首页的html抓取到本地，保存在D:/sina.html文件中，同时显示下载的进度。
+复制代码 代码如下:
+
+import urllib
+def callbackfunc(blocknum, blocksize, totalsize):
+​    '''回调函数
+​    @blocknum: 已经下载的数据块
+​    @blocksize: 数据块的大小
+​    @totalsize: 远程文件的大小
+​    '''
+​    percent = 100.0 * blocknum * blocksize / totalsize
+​    if percent > 100:
+​        percent = 100
+​    print "%.2f%%"% percent
+
+url = 'http://www.sina.com.cn'
+local = 'd:\\sina.html'
+urllib.urlretrieve(url, local, callbackfunc)
+
+构建代理
+http_proxy = urllib.request.ProxyHandler({'https':'ip:端口'})
+构建opener对象
+opener = urllib.request.build_opener(http_proxy)
+伪装浏览器访问
+opener.addheaders = [('user-agent':'...')]
+安装opener
+urllib.request.install_opener(opener)
+
+
+
+requests模块：（需自行安装）
+获取网页方法：get（）函数
+req=reqests.get(url)  #请求网页
+req.encoding('utf8')   #设置编码格式
+print req.text #打印网页内容
+req.json()  # 使用json
+req.status_code # 返回response类型（正常为200,401，402,403为访问被禁止,404网页不存在）
+判断网页请求是否成功：
+if req.status_code==requests.codes.ok: #成功为真，requests.codes.ok为常量
+headers信息：
+User-Agent  #请求来源的浏览器信息
+Cookie      #浏览器保存的此域名的cookie值，记录登入状态
+Host       #指定请求的服务器的域名和端口号，常用来验证请求
+Referer	   #访问前的网页地址，即请求来路页面，也会用来验证请求
+设置超时时间上限：timeout 如：
+req=requests.get(url,timeout=1)
+requests.post(url, data) # data 为请求数据，字典类型
+
+
+
+
+
+# 正则表达式
+
+模块：re
+findall(pattern,string,flags=0) #返回字符串中符合规则的所有子串列表
+为了避免字符串被转义，通常在前面加上r，例如：
+import re
+string = 'Hi, I am Shirley Hilton. I am his wife.'
+pattern = r'hi'
+result = re.findall(pattern,string)
+print result
+
+>>>['hi','hi']
+
+反复匹配同一个规则时，可以预先编译好规则，在分别匹配，从而提升程序运行效率，例如：
+import re
+string = 'Hi, I am Shirley Hilton. I am his wife.'
+string2 = 'I am Chinese'
+pattern = re.compile(r'hi')
+result = pattern.findall(string)
+result2 = pattern.findall(string2)
+print result
+print result2
+pattern规则:
+**[]：**从中括号中的字符串任意一个进行匹配，可与+，？,\*组合
+**\b:** 匹配单词的开始或结束（单词表示字母和数字）
+**\B：**匹配不是单词开头或结束的位置
+**\d:** 找出所有数字，输出的是独立的单个数字
+**\D：**匹配不是数字的字符
+**\d+:**表示一到多个数字，输出的是一个或多个数字组合
+**\d?:**表示零到一个数字，结果中会有许多空字符。例如：print re.findall(r'\d?',1a23) >>>['1','','2','3','']
+**\d\*:**表示任意个，结果中会有空字符
+**. :** 表示任意字符。'2.'表示匹配含有2，且2在前面的。
+**.\*：**例如：'C.*n' 表示匹配含有C到n的字符串。
+**\d{a:b}:** 表示匹配a到b个字符串
+**[A-z]+:** 表示匹配所有的英文字母
+**[0-9A-z]+:**表示匹配所有数字与英文字母
+**|：**匹配几种规则中任意一种
+**^：**匹配字符串的开始
+**$：**匹配字符串的结尾
+**\\.：**表示.字符
+**\w：**匹配字母或数字或下划线或汉字（我试验下了，发现3.x版本可以匹配汉字，但2.x版本不可以）
+**\W：**匹配任意不是字母或数字或下划线的字符（Python2中中文是非字母的字符，Python2是）
+**\s：**匹配任意的空白符
+**\S :**匹配任意不是空白字符的字符
+
+**[^x]:** 匹配除了x以外的任意字符
+**[^aeiou]:** 匹配除了aeiou这几个字母以外的任意字符
+
+
+
+search 是判断字符串中是否含有指定的字符串，如果有会得到一个匹配的对象，否则返回None。他只会判断有没有，不会找出符合规则的子串。例如：
+import re
+string = 'Hi, I am Shirley Hilton. I am his wife.'
+string2 = 'I am Chinese'
+pattern = re.compile(r'hi')
+result = pattern.search(string)
+result2 = pattern.search(string2)
+print result.group()
+print result2.group()
+
+>>>hi
+>>>hi
+
+match  从开始出检索字符串，返回一个符合规则的匹配对象。没有则返回None
+
+
+
+Python处理HTML转义字符
+抓网页数据经常遇到例如或者这种HTML转义符，抓到字符串里很是烦人。
+比方说一个从网页中抓到的字符串
+html = '```&lt;abc&gt;```'
+用Python可以这样处理：
+import HTMLParser
+html_parser = HTMLParser.HTMLParser()
+txt = html_parser.unescape(html) #这样就得到了txt = '<abc>'
+如果还想转回去，可以这样：
+import cgi
+html = cgi.escape(txt) # 这样又回到了 html = '```&lt;abc&gt;```'
+
+#### (?P=<...)
+
+- 前定界表示搜索的字符匹配前缀，但不显示在匹配结果中。
+
+
+
+
+创建文件夹：
+os.mkdir(path)函数和os.makedirs(path)。
+这两个函数之间最大的区别是当父目录不存在的时候os.mkdir(path)不会创建，os.makedirs(path)则会创建父目录。
+os模块walk用法：
+os.walk()返回值为三个，分别为文件目录、该目录下的子文件夹、该目录下的文件
+
+
+os模块使用
+os.path.isfile(path):用于判断path是否为一个文件并且是否存在
+os.path.isdir(path):用于判断path是否为一个目录并且是否存在
+os.path.exists(path):函数用来检验给出的路径是否真地存在。
+os.path.split(path):函数返回一个路径的目录名和文件名。不判断路径文件（夹）是否存在
+os.remove(path):函数用来删除一个文件。
+os.system():函数用来运行shell命令。
+os.linesep:p字符串给出当前平台使用的行终止符。例如，Windows使用'\r\n'，Linux使
+用'\n'而Mac使用'\r'。
+os.getcwd():)函数得到当前工作目录，即当前Python脚本工作的目录路径。
+os.name:字符串指示你正在使用的平台。比如对于Windows，它是'nt'，而对于Linux/Unix
+用户，它是'posix'。
+os.getenv()和os.putenv()函数分别用来读取和设置环境变量。
+
+
+python列出文件夹下所有文件的四个方法
+#方法1：使用os.listdir
+import os
+for filename in os.listdir(r'c:\windows'):
+​    print filename
+#方法2：使用glob模块，可以设置文件过滤
+import glob
+for filename in glob.glob(r'c:\windows\*.exe'):
+​    print filename
+#方法3：通过os.path.walk递归遍历，可以访问子文件夹
+import os.path
+def processDirectory ( args, dirname, filenames ):
+​    print 'Directory',dirname
+​    for filename in filenames:
+​        print ' File',filename
+os.path.walk(r'c:\windows', processDirectory, None )
+#方法4：非递归
+#!/bin/python
+#
+#site:www.jbxue.com
+import os
+for dirpath, dirnames, filenames in os.walk('c:\\winnt'):
+​    print 'Directory', dirpath
+​    for filename in filenames:
+​        print ' File', filename
+
+
+文件复制：
+from shutil import copy
+copy('a.txt', f'a_{i}.txt') #参数：源文件，目标文件
+
+
+来说一种简单的多线程方法：
+python 里有一个 thread 模块，其中提供了一个函数：
+start_new_thread(function, args[, kwargs])
+function 是开发者定义的线程函数，
+args 是传递给线程函数的参数，必须是tuple类型，
+kwargs 是可选参数。
+
+
+类（class）
+class Car（object）: # （object） python2中建议写，python3中不用）
+​    speed=50.0
+​    price=2.5
+​    def drive(self,distance):
+​	print 'time is',distance/self.speed
+​	print 'cost',distance*self.price
+c1=Car()
+c1.drive(180)
+注：未定义则使用默认值
+
+dir() 返回一个对象的所有属性和方法
+isinstance() 判断一个变量是否是某个类型，如isinstance（c1,Car）判断c1是否是Car类型
+hasattr() 判断一个变量是否含有某个属性， 如hasattr(c1, 'price') 判断c1是否含有price属性
+访问私有属性：对象._类__私有属性名
+
+
+
+设置递归深度（出现此错误：RuntimeError: maximum recursion depth exceeded while calling a Python object，可进行设置）
+import sys
+sys.setrecursionlimit(10000)  #括号中数值为递归深度
+
+
+pygam包
+pygame.cdrom	访问光驱
+pygame.cursors	加载光标
+pygame.diaplay	访问显示设备
+pygame.draw	绘制形状、线和点
+pygame.event	管理事件
+pygame.font	使用字体
+pygame.image	加载和存储图片
+pygame.joystick	使用游戏手柄或者类似的东西
+pygame.key 	读取键盘按键
+pygame.mixer	声音
+pygame.mouse	鼠标
+pygame.movie	播放视频
+pygame.music	播放音乐
+pygame.overlay	访问高级视频叠加
+pygame.rect	管理矩形区域
+pygame.sndarray	操作声音数据
+pygame.sprite	操作移动图像
+pygame.surface	管理图像和屏幕
+pygame.surfarray	管理点阵图像数据
+pygame.time	管理时间和帧信息
+pygame.transtion	缩放和移动图像
+注意：有些模块可能在某些平台不存在，可以用none来测试
+if pygame.font is None:
+​	print "The font module is not available!"
+​	exit()
+pygame.display.set_mode(resoultion = (0, 0), flags = 0, depth = 0) :
+resoution：元组类型，代表分辨率
+flags：标志位，0表示无特性
+FULLSCREEN:创建一个全屏窗口
+DOUBLEUF:创建一个“双缓冲区”，建议在HWSURFACE或者OPENGL时使用
+HWSURFACE:创建一个硬件加速的窗口，必须和FULLSCREEN同时使用
+OPENGL:创建一个OPENGL渲染的窗口
+RESIZEABLE:创建一个可以改变大小的窗口
+NOFRAME:创建一个没有边框的窗口
+
+得到鼠标位置坐标的方法是：pygame.mouse.get_pos()与以往用的函数有些不同，这个函数会返回两个值：鼠标的x坐标和y坐标。
+pygame.mouse.set_pos()：set the mouse(鼠标） position（位置）
+
+
+
+
+
+
+
+## pandas 模块
+
+### DataFrame与Series
+
+**Series:构建的方法:**一组数组（列表或元组），利用Series(),自动生成索引。或Series(字典),值只有一列，无列索引，只有行索引
+
+**属性：** .index、.values   .name   .index.name   .values.name
+
+
+
+**DataFrame构建方法：**直接传入一个由等长列表或Numpy数组组成的字典，利用DataFrame（），值有多列，并有列索引
+
+**属性：** .columns
+
+1、由数组、列表或元组组成的字典：，每个序列变成DataFrame的一列，所有序列的长度必须相同
+
+2、二维ndarray,可以传入行标和列标
+
+3、由字典组成的字典：各内层字典会成为一列，键会被合并成结果的行索引
+
+4、由Series组成的字典，每个Series会成为一列，如果没有显示指定索引，则各Series的索引会被合并成结果的行索引
+
+### append()
+
+- 在末尾增加数据，ignore_index : 是否忽略索引，False表示索引按添加的索引表示，True表示按原数据索引
+
+
+
+### sort_index(ascending=False)
+
+- 根据索引对数据 排序
+
+- ascending=False 表示降序排列，True表示升序排列 
+
+### sort_values(by='', ascending=False)
+
+- 根据by所代表的列对数据进行排序
+- ascending=False 表示降序排列，True表示升序排列 
+
+### reset_index(drop=False)
+
+- 重置索引，如果drop=False表示保留原索引作为一列数据，添加新的默认索引，drop=True表示丢弃原索引添加新的默认索引
+
+### to_excel(filename)
+
+- 将数据保存到excel文件中
+
+### to_csv(filename)
+
+- 将数据保存到csv文件中 
+
+
+
+### panda.read_excel(filepath)
+
+*function:* **读取excel表格**
+
+*return*: 	**DataFrame object**
+
+
+
+
+
+
+
+### pandas.to_datetime()
+
+- 将DataFrame中的字符串日期转为日期
+
+
+
+## python字符编码问题
+
+#### python3 将字符串unicode转换为中文
+
+```python
+>>>aa = '\\u5e7f\\u4e1c\\u7701\\u6df1\\u5733\\u5e02\\u5b9d\\u5b89\\u533a\\u77f3\\u5ca9\\u8857\\u9053\\u6c34\\u7530\\u77f3\\u9f99\\u5927\\u905326\\u53f7' 
+>>> aa.encode('utf-8').decode("unicode_escape") 
+'广东省深圳市宝安区石岩街道水田石龙大道26号' 
+>>>
+
+```
+
+
+
+
+

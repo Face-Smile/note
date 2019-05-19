@@ -1,0 +1,14 @@
+			mysql command line statement
+1. login command:	mysql -u [username] -p [password]
+
+2. backup command:	
+	backup single database: mysqldump -u [username] -p [password] [databasename] > [backupfile.sql]
+	backup multiple databases: mysqldump -u [username] -p [password] --databases [databasename] [databasename] > [backupfile.sql]
+	backup database with compress: mysqldump -u [uname] -p[pass] [dbname] | gzip -9 > [backupdbfile.sql.gz]		extract command: gunzip [backupdbfile.sql.gz]
+	restore database: mysql -u [username] -p [password] [name_to_restore] < [backupdbfile.sql]
+
+3. alter table auto_increment value:
+    alter table TABLE_NAME auto_increment = VALUE;
+
+
+
