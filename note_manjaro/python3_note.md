@@ -181,3 +181,151 @@ python3 中类的简单方法（简单来说就是没有self参数）,这种方�
 
 #### 自定义装饰器
 
+
+
+
+
+
+
+
+
+### Python try…except…else…finally
+
+Python 中try和finally中都有return 时, 如果没有错误,最后返回的是finally块中的return,即无论如何finally块的与句都会执行.
+
+```python
+# test.py
+
+def test():
+  try:
+    print(1)
+    return 1
+  finally:
+		print(3)
+    return 3
+if __name__ == '__main__':
+  print(test())
+  
+
+----------------
+运行结果:
+1
+3
+3
+```
+
+Python 中try, else和finally中都有return 时, 如果没有错误,最后返回的是finally块中的return,try语句块中的return会阻止else语句块的执行,但不会影响finally语句块的执行.(另外,else语句块前面必须由except语句块)
+
+```python
+# test.py
+
+def test():
+  try:
+    print(1)
+    return 1
+  except:
+    print(2)
+    return 2
+ 	else:
+    print(3)
+    return 3
+ 	finally:
+    print(4)
+    return 4
+if __name__ == '__main__':
+  print(test())
+  
+---------
+运行结果:
+1
+4
+4
+```
+
+
+
+
+
+### python 数据库连接池
+
+需要按安装的包:DBUtils
+
+DBUtils提供两种外部接口:
+
+- PersistentDB: 提供线程专用的数据库连接,并自动管理连接
+- PooledDB : 提供线程间可共享的数据库连接,并自动管理.
+
+实例(简单的数据库连接池:
+
+```python
+import MySQLdb
+from DBUtils.PooledDB import PooledDB
+pool = PooledDB(MySQLdb,5,host='localhost',user='root',\passwd='pwd',db='myDB',port=3306) #5为连接池里的最少连接数
+conn = pool.connection()  #以后每次需要数据库连接就是用connection（）函数获取连接就好了
+cur=conn.cursor()
+SQL="select * from table1"
+r=cur.execute(SQL)
+r=cur.fetchall()
+cur.close()
+conn.close()
+```
+
+数据库连接工具包:
+
+```python
+import pymysql
+import DBUtils
+class OPMysql(object):
+
+    __pool = None
+
+    def __init__(self):
+        # 构造函数，创建数据库连接、游标
+        self.coon = OPMysql.getmysqlconn()
+        self.cur = self.coon.cursor(cursor=pymysql.cursors.DictCursor)
+
+
+    # 数据库连接池连接
+    @staticmethod
+    def getmysqlconn():
+        if OPMysql.__pool is None:
+            __pool = PooledDB(creator=pymysql, mincached=1, maxcached=20, host=mysqlInfo['host'], user=mysqlInfo['user'], passwd=mysqlInfo['passwd'], db=mysqlInfo['db'], port=mysqlInfo['port'], charset=mysqlInfo['charset'])
+            print(__pool)
+        return __pool.connection()
+
+    # 插入\更新\删除sql
+    def op_insert(self, sql):
+        print('op_insert', sql)
+        insert_num = self.cur.execute(sql)
+        print('mysql sucess ', insert_num)
+        self.coon.commit()
+        return insert_num
+
+    # 查询
+    def op_select(self, sql):
+        print('op_select', sql)
+        self.cur.execute(sql)  # 执行sql
+        select_res = self.cur.fetchone()  # 返回结果为字典
+        print('op_select', select_res)
+        return select_res
+
+    #释放资源
+    def dispose(self):
+        self.coon.close()
+        self.cur.close()
+```
+
+PooledDB 参数解释:
+
+1. `mincached`:最少的空闲连接数,如果空闲连接数小于这个数,pool会创建一个新的连接.
+2. `maxcached`:最大的空连接数吗,如果空闲连接数大于这个数, pool会关闭连接.
+3. `maxconnections`: 最大的连接数,进程中最大可创建的线程数.
+4.  `blocking`: 当连接数达到最大的连接数.再次请求时,如果这个值时True,请求连接的程序会一直等待,直到当前连接数小于最大连接数;如果值为False,会报错.
+5. `maxshared`: 当连接数达到这个数时,请求新的连接会分享已经分配出去的连接.
+
+在uwsgi中，每个http请求都会有一个进程，连接池中配置的连接数都是一个进程为单位的（**即上面的最大连接数，都是在一个进程中创建的线程数**），如果业务中，一个http请求中需要的sql连接数不是很多的话（其实大多数都只需要创建一个连接），配置的连接数配置都不需要太大。
+
+**连接池对性能的提升：**
+
+- 在程序创建连接的时候，可以从一个空闲的连接中获取，不需要重新初始化连接，提升获取连接的速度。
+- 关闭连接的时候，把连接放回连接池，而不是真正的关闭，所以可以减少频繁的打开和关闭连接。
