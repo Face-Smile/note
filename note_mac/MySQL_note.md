@@ -487,6 +487,33 @@ Archive是归档的意思，在归档之后很多的高级功能就不再支持�
 
 
 
+
+
+## Mysql 查询已连接的用户信息
+
+终端输入:
+
+```shell
+mysqladmin -u root -p processlist
+# 然后输入密码
+```
+
+## MySQL关闭指定的连接
+
+先查询要关闭的连接的id,上述方法,然后终端输入:
+
+```shell
+mysqladmin -u rot -p kill 连接id
+```
+
+
+
+
+
+
+
+
+
 ### MySQL python driver
 
 ## 7.1 Connector/Python Connection Arguments
