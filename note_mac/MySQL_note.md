@@ -508,9 +508,30 @@ mysqladmin -u rot -p kill 连接id
 
 
 
+## mysql 查看建表语句
+
+```shell
+SHOW CREATE TABLE table_name
+```
 
 
 
+## MySQL查看储存过程
+
+```shell
+SHOW {PROCEDURE | FUNCTION} STATUS [LIKE ‘pattern’]
+```
+
+PROCEDURE和FUNCTION，分别表示查看存储过程和函数 
+LIKE语句，表示匹配的名称
+
+
+
+## MySQL查看储存过程创建语句
+
+```shell
+SHOW CREATE {PROCEDURE | FUNCTION} sp_name 
+```
 
 
 

@@ -870,7 +870,7 @@ git rebase --continue
 
 
 
-## git 仓库克隆
+## git 仓库克隆深度
 
 `git clone <url>`
 
@@ -879,6 +879,35 @@ git rebase --continue
 `--depth=<number>`: 用于指定克隆深度，为1表示只克隆最近一次的commit。
 
 
+
+## `git fetch`和`git pull`区别
+
+### `git fetch`相当于是从远程获取最新到本地,不会自动merge.
+
+示例:
+
+```shell
+git fetch origin master # 程仓库的master分支下载到本地branch中
+git log master..origin/master # 比较本地master分支和origin/master分支 的日志差别
+git merge origin/master # 将本地仓库master和origin/master合并
+```
+
+也可以使用以下指令:
+
+```shell
+git fetch origin master:tmp # 从远程仓库获取最新master分支至本地tmp分支
+git diff tmp # 查看当前分支和tmp分支的区别
+```
+
+### `git pull`相当于是从远程获取最新版本到本地并merge
+
+```shell
+git pull origin master
+```
+
+相当于从远程仓库获取最新的版本到本地并merge,
+
+在实际使用中,`git fetch`更安全些.
 
 
 
