@@ -181,6 +181,75 @@ python3 中类的简单方法（简单来说就是没有self参数）,这种方�
 
 #### 自定义装饰器
 
+##### 方法装饰器
+
+##### 类装饰器
+
+#### 内置装饰器
+
+##### `staticmethod`
+
+`staticmethod`方法使类中的函数成为一个普通函数，方法不需要传入实例对象，staticmethod是一个类，属于类装饰器。
+
+##### `classmethod`
+
+`classmethod`装饰器使得函数的第一个参数不是实例对象，而是类对象；调用此方法不需要创建类的实例。classmethiod 是一个类，属于类装饰器。
+
+##### `property`
+
+对于一个类的属性，python是没有限制的，但有的时候需要对属性的访问加以限制，property装饰器就是干这的。
+
+property是一个类，它由三个方法：deleter, setter, getter，有两种使用方式。
+
+```python
+class Person(Animal):
+  _num_ear = 2
+  def __inti__(self):
+    self._name = 'xiaoming'
+    self.arg = 20
+  def get_name(self):
+    print('get name')
+    return self._name
+ 	def set_name(self):
+    print('set name')
+    self._name = name
+  def delete_name(self):
+    print('del name')
+    del self._name
+  name = property(get_name, set_name, delete_name, doc='name of person')
+  # 或者使用匿名函数
+  name = property(lambda self:self._name, lambda self, name: setattr(self, '_name', name), lambda self:delattr(self, '_name'))
+  
+if __name__ = '__main__':
+  p = Person()
+  print(p.name)	# 会调用get_name
+  p.name = 'xxx'	# 会调用set_name
+  del p.name	# 会调用delete_name
+```
+
+property可以手动指定限制的函数，有四个参数，但这样显得比较麻烦，可以使用使用装饰器的形式。
+
+```python
+class Person(Amimal):
+  _num_ear = 2
+  
+  @perporty
+  def name(self):
+    return self._name
+  @name.setter
+  def name(self, name):
+    self._name = name
+  @name.deleter
+  def name(self):
+    del self._name
+   
+if __nam__ == '__main__':
+  p = Person()
+  print(p.name)
+  p.name = 'xxxx'
+  del p.name
+```
+
 
 
 
@@ -246,7 +315,7 @@ if __name__ == '__main__':
 
 
 
-### python 数据库连接池
+## python 数据库连接池
 
 需要按安装的包:DBUtils
 
@@ -329,3 +398,207 @@ PooledDB 参数解释:
 
 - 在程序创建连接的时候，可以从一个空闲的连接中获取，不需要重新初始化连接，提升获取连接的速度。
 - 关闭连接的时候，把连接放回连接池，而不是真正的关闭，所以可以减少频繁的打开和关闭连接。
+
+
+
+
+
+## python import 和 from … import
+
+使用import 导入包后,修改了包中的变量,会影响以后import和from…import该包的变量.
+
+
+
+
+
+
+
+
+
+## python 小数
+
+`decimal`模块中的一些工具可以用来设置小数数值的精确度
+
+```python
+>>> import decimal
+>>> decimal.Decimal(1) / decimal.Decimal(7)
+Decimal('0.1428571428571428571428571429')
+>>> decimal.getcontext().prec = 4
+>>> decimal.Decimal(1) / decimal.Decimal(7)
+Decimal('0.1429')
+```
+
+### 小数上下文环境管理器
+
+可以使用上下文管理器语句来重新设置临时进度。在语句退出后，精度重新设置为初始值。
+
+```python
+>>> import decimal
+>>> with decimal.localcontext() as ctx:
+...     ctx.prec = 2
+...     decimal.Decimal(1) / decimal.Decimal(3)
+...
+Decimal('0.33')
+```
+
+
+
+## python 分数类型
+
+```python
+>>> from fractions import Fraction
+>>> x = Fraction(1, 3)
+>>> x
+Fraction(1, 3)
+>>> y = Fraction(1, 4)
+>>> y
+Fraction(1, 4)
+>>> print(y)
+1/4
+>>> x + y
+Fraction(7, 12)
+>>> print(x + y)
+7/12
+>>> float(x)
+0.3333333333333333
+>>> float(y)
+0.25
+>>> Fraction.from_float(1.75)
+Fraction(7, 4)
+```
+
+其表达式中允许某些类型的混合，尽管Fraction有事必须手动的进行传递一确保精度。
+
+```python
+>>> x
+Fraction(1, 3)
+>>> x + 2
+Fraction(7, 3)
+>>> x + 2.0
+2.3333333333333335
+>>> x + (1./3)
+0.6666666666666666
+>>> x + (4./3)
+1.6666666666666665
+>>> x + Fraction(4, 3)
+Fraction(5, 3)
+```
+
+> 尽管可以把浮点数转换为分数，在某些情况下，这么做会有不可避免的精度损失，因为数字在其最初始的浮点形式不是最精确的。当需要的时候，我们可以限制最大化分母值来简化这样的结果：
+
+```python
+>>> 4.0 / 3
+1.3333333333333333
+>>> (4.3 /3).as_integer_ratio()
+(6455159465897711, 4503599627370496)
+>>> a = x + Fraction(*(4.0 /3).as_integer_ratio())
+>>> a
+Fraction(22517998136852479, 13510798882111488)
+>>> 22517998136852479 / 13510798882111488.
+1.6666666666666667
+>>> a.limit_denominator(10)
+Fraction(5, 3)
+```
+
+
+
+## python环境管理协议
+
+### with/as 环境管理器
+
+基本使用：
+
+```python
+with expression [as variable]:
+  	with-block
+```
+
+### 如何编写环境管理器
+
+使用运算符重载来实现环境管理器
+
+with语句的实现方式：
+
+1. 计算表达式，所得到的对象成为环境管理器，它必须有`__enter__` 和 `__exit__`方法。
+2. 环境管理器的`__enter__`方法会被调用，如果as字句存在，其返回值会赋值给as字句中的变量，否者直接丢弃，
+3. 代码中的嵌套代码会执行。
+4. 如果with代码引发异常，`__exit__(type, value, traceback)`方法就会调用（带有异常细节）这些也是由sys.exec_info()返回的相同值。如果此方法返回值为假，则异常会重新引发，否则，异常会终止。正常情况下异常应该被重新引发，这样的花才能传递到with语句之外。
+5. 如果with代码块没有异常m`__exit__`方法依然会被调用，其type、value以及traceback参数都会以None传递。
+
+```python 
+class TraceBlock:
+    def message(self, arg):
+        print('running', arg)
+    def __enter__(self):
+        print('starting with block')
+        return self
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        if exc_type is None:
+            print('exited normally\n')
+        else:
+            print('raise an exeception!', exc_type)
+            return False
+
+
+with TraceBlock() as action:
+    action.message('test 1')
+    print('reached')
+
+with TraceBlock() as action:
+    action.message('test 2')
+    raise TypeError
+    print('not reached')
+```
+
+```python
+starting with block
+running test 1
+reached
+exited normally
+
+
+starting with block
+running test 2
+raise an exeception! <class 'TypeError'>
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+TypeError
+```
+
+
+
+
+
+## Python 异常
+
+
+
+类异常
+
+```python
+# mathlib.py
+
+class NumErr(Exception): pass
+class Divzero(NumErr): pass
+class Oflow(NumErr): pass
+
+def func():
+  ...
+  raise DivZero()
+```
+
+当你的库用户只需列出共同的超类，来捕捉库的所有异常，无论是现在还是以后。
+
+```python
+# client.py
+import mathlib
+
+...
+try:
+  mathlib.func(...)
+except mathlib.NumErr:
+  ... report and recover ...
+```
+
+当你修改异常类代码时，作为共同超类的新的子类来增加新的异常。
+
