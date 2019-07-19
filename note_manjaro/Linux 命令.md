@@ -317,6 +317,87 @@ smilejack ALL=(ALL:ALL)	ALL
 
 #### awk
 
+字符串分割
+
+
+
+### ssh
+
+ssh 登入服务器
+
+```shell
+ssh user@host
+```
+
+防止登入掉线，可以添加`-o ServerAliveInterval=60`,数字可以改
+
+```shell
+ssh -o ServerAliveInterval=60 user@host
+```
+
+使用代理登入(`-o ProxyCommand="nc -X 5 -x 127.0.0.1:1081 %h %p"`)
+
+```shell
+ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1081 %h %p" user@host
+```
+
+两者都使用
+
+```shell
+ssh -o ServerAliveInterval=60 -o ProxyCommand="nc -X 5 -x 127.0.0.1:1081 %h %p" user@host
+```
+
+
+
+### ssh-keygen
+
+#### 创建一个 SSH key 
+
+```shell
+$ ssh-keygen -t rsa -C "your_email@example.com"
+```
+
+代码参数含义：
+
+-t 指定密钥类型，默认是 rsa ，可以省略。
+-C 设置注释文字，比如邮箱。
+-f 指定密钥文件存储文件名。
+
+以上代码省略了 -f 参数，因此，运行上面那条命令后会让你输入一个文件名，用于保存刚才生成的 SSH key
+
+```shell
+Generating public/private rsa key pair.
+# Enter file in which to save the key (/c/Users/you/.ssh/id_rsa): [Press enter]
+```
+
+当然，你也可以不输入文件名，使用默认文件名（推荐），那么就会生成 id_rsa 和 id_rsa.pub 两个秘钥文件。
+
+
+
+### ssh-copy-id
+
+ssh-copy-id命令可以把本地主机的公钥复制到远程主机的authorized_keys文件上
+
+ssh-copy-id命令也会给远程主机的用户主目录（home）和~/.ssh, 和~/.ssh/authorized_keys设置合适的权限。  
+
+ssh-copy-id命令可以把本地的ssh公钥文件安装到远程主机对应的账户下。                                                                                                           达到的功能：        
+
+ssh-copy-id - 将你的公共密钥填充到一个远程机器上的authorized_keys文件中。   
+
+使用模式：        `ssh-copy-id [-i [identity_file]] [user@]machine`   
+
+描述：          
+
+​			ssh-copy-id 是一个实用ssh去登陆到远程服务器的脚本（假设使用一个登陆密码，                    因此，密码认证应该被激活直到你已经清理了做了多个身份的使用）。                   
+
+​			它也能够改变远程用户名的权限，~/.ssh和~/.ssh/authorized_keys                    
+
+​			删除群组写的权限（在其它方面，如果远程机上的sshd在它的配置文件中是严格模式的话，这能够阻止你登陆。）。
+
+​			如果这个 “-i”选项已经给出了，然后这个认证文件（默认是~/.ssh/id_rsa.pub）被使用，不管在你的ssh-agent那里是否有任何密钥。
+
+​			另外，命令 “ssh-add -L” 提供任何输出，它使用这个输出优先于身份认证文件。如果给出了参数“-i”选项，或者ssh-add不产生输出，然后它使用身份认证文件的内容。一旦它有一个或者多个指纹， 它使用ssh将这些指纹填充到远程机~/.ssh/authorized_keys文件中。
+
 
 
 
