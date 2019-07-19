@@ -63,6 +63,28 @@
 
 
 
+### 代理设置
+
+设置代理
+
+```shell
+git config —global —set http.proxy [代理网址]
+```
+
+取消代理设置
+
+```shell
+git config --global --unset http.proxy
+```
+
+
+
+
+
+
+
+
+
 ### 创建项目
 
 `git init`
