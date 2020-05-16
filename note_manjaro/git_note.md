@@ -3,7 +3,7 @@
 `![img](http://www.runoob.com/wp-content/uploads/2015/02/git-process.png)`
 
 
-![img](/home/smilejack/Documents/note/git-process.png)
+![img](./git-process.png)
 
 ## 基本概念
 
@@ -21,7 +21,7 @@
 
 原图地址：`http://www.runoob.com/wp-content/uploads/2015/02/1352126739_7909.jpg`
 
-![img](/home/smilejack/Documents/note/1352126739_7909.jpg)
+![img](./1352126739_7909.jpg)
 
 图中左侧为工作区，右侧为版本库。在版本库中标记为 "index" 的区域是暂存区（stage, index），标记为 "master" 的是 master 分支所代表的目录树。
 
@@ -68,7 +68,7 @@
 设置代理
 
 ```shell
-git config —global —set http.proxy [代理网址]
+git config —global http.proxy [代理网址]
 ```
 
 取消代理设置
@@ -428,6 +428,8 @@ git reset --hard <HEAD>
 $ git diff HEAD
 ```
 
+
+
 直接将两个分支上最新的提交做diff
 
 ```shell
@@ -436,11 +438,15 @@ $ #或
 $ git diff topic..master
 ```
 
+
+
 输出自`topic`和`master`分别开发以来，`master`分支上的变更。
 
 ```shell
 $ git diff topic...master
 ```
+
+
 
 查看简单的diff结果，可以加上`--stat`参数
 
@@ -448,11 +454,15 @@ $ git diff topic...master
 $ git diff --stat
 ```
 
+
+
 查看当前目录和另外一个分支(`test`)的差别
 
 ```shell
 $ git diff test
 ```
+
+
 
 显示当前目录和另一个叫’`test`‘分支的差别
 
@@ -460,12 +470,16 @@ $ git diff test
 $ git diff HEAD -- ./lib
 ```
 
+
+
 显示当前目录下的lib目录和上次提交之间的差别(更准确的说是在当前分支下)
 比较上次提交和上上次提交
 
 ```shell
 $ git diff HEAD^ HEAD
 ```
+
+
 
 比较两个历史版本之间的差异
 
@@ -676,6 +690,83 @@ $ git reset --keep start                    (3)
 
 
 
+## `git restore`
+
+取消尚未提交至暂存区的更改
+
+```
+➜  git_test git:(master) ✗ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   code.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+➜  git_test git:(master) ✗ cat code.txt
+this is the first line
+this is the second line
+this is the third line
+this is the forth line
+this is the sixth line
+➜  git_test git:(master) ✗ git restore code.txt         
+➜  git_test git:(master) git status          
+On branch master
+nothing to commit, working tree clean
+➜  git_test git:(master) cat code.txt 
+this is the first line
+this is the second line
+this is the third line
+this is the forth line
+```
+
+**`git restore --staged`**
+
+取消尚未提交至版本库的修改
+
+```
+➜  git_test git:(master) cat code.txt 
+this is the first line
+this is the second line
+this is the third line
+this is the forth line
+➜  git_test git:(master) vim code.txt
+➜  git_test git:(master) ✗ cat code.txt
+this is the first line
+this is the second line
+this is the third line
+this is the forth line
+this is the fifth line
+➜  git_test git:(master) ✗ git status  
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   code.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+➜  git_test git:(master) ✗ git add code.txt
+➜  git_test git:(master) ✗ git status      
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   code.txt
+
+➜  git_test git:(master) ✗ git restore --staged code.txt
+➜  git_test git:(master) ✗ git status                   
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   code.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+
+
+
+
 ## `git rm`
 
 `git rm`命令用于从工作区和索引中删除文件。
@@ -829,13 +920,125 @@ $ git add mydir
 
 ## `git branch`
 
+查看分支
+
+### `git branch <name>`
+
+创建分支
+
 
 
 ## `git checkout`
 
+### `git checkout <name>`
+
+切换分支
+
+
+
+### `git checkout -b <name>`
+
+创建并切换分支
+
+
+
+### `git checkout -- <file>`
+
+取消尚未提交的更改， 同`git restore <file>`
+
+
+
+
+
 
 
 ## `git merge`
+
+### `git merge <name>`
+
+合并某分支到当前分支，如果没有冲突，则默认为快速合并
+
+#### 解决冲突
+
+合并分支往往也不是一帆风顺的。
+
+(1)再创建一个新分支dev。
+
+![img](git_note/wpsEauaqr.png) 
+
+(2)修改code.txt内容，并进行提交。
+
+![img](git_note/wpsPluzlr.png) 
+
+(3)切换回master分支。
+
+![img](git_note/wps65Meyu.png) 
+
+(4)在master的code.txt添加一行内容并进行提交。
+
+![img](git_note/wpsqhP0nu.png) 
+
+现在，master分支和dev分支各自都分别有新的提交，变成了这样：
+
+![img](git_note/wpsITGuFq.png) 
+
+这种情况下，git无法执行“快速合并”，只能试图把各自的修改合并起来，但这种合并就可能会有冲突。
+
+(5)执行如下命令尝试将dev分支合并到master分支上来。
+
+![img](git_note/wpsXgAUts.png) 
+
+git告诉我们，code.txt文件存在冲突，必须手动解决冲突后再提交。
+
+(6)git status也可以告诉我们冲突的文件：
+
+![img](git_note/wpsFYrRNr.png) 
+
+(7)查看code.txt的内容。
+
+![img](git_note/wpsi4kyku.png) 
+
+(8)git用<<<<<<<，=======，>>>>>>>标记出不同分支的内容，我们修改如下后保存：
+
+![img](git_note/wpsPZob4s.png) 
+
+(9)再提交。
+
+![img](git_note/wpsipUVJq.png)
+
+(10) 现在，master分支和dev分支变成了下图所示：
+
+![img](git_note/wpszzTeTt.png) 
+
+(11)用带参数的git log也可以看到分支的合并情况：
+
+![img](git_note/wpsXpGeqt.png) 
+
+(12)最后工作完成，可以删除dev分支。
+
+![img](git_note/wpsPqHhCs.png) 
+
+
+
+### `git merge --no-ff <branch_name>`
+
+禁用快速合并分支来合并分支
+
+
+
+## `git stash`
+
+把当前工作现场保存起来（适用于当前工作区，不足以提交到版本库，当又不能丢弃）
+
+### `git stash list`
+
+查看以保存的工作现场
+
+![image-20191226181158645](git_note/image-20191226181158645.png)
+
+### `git stash pop`
+
+恢复以保存的工作现场
 
 
 

@@ -164,3 +164,34 @@ root     pts/0    192.168.72.1     14:04    0.00s  0.00s  0.00s w
 `pkill -kill -t 　踢人命令`
 
 `tty`:　所踢用户的TTY
+
+
+
+##### 高分屏配置
+
+1. chrome
+
+   ```
+    sudo vim /usr/share/applications/google-chrome.desktop
+   ```
+
+   ```
+    # 这一行修改
+    Exec=/usr/bin/google-chrome-stable %U
+    # 添加启动命令参数
+    Exec=/usr/bin/google-chrome-stable --force-device-scale-factor=1.7 %U
+   ```
+
+##### gnome-terminal 终端无法使用Monaco字体
+
+安装此地址的字体即可使用 https://gist.github.com/epegzz/1634235#file-monaco_linux-powerline-ttf
+
+
+
+##### gnome 设置alt-tab 只切换当前工作空间的程序
+
+```
+gsettings set org.gnome.shell.app-switcher current-workspace-only true
+```
+
+> 如果需要取消 只需要将它的值设置为false即可
