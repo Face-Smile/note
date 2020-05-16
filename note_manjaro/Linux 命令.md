@@ -1,36 +1,36 @@
-bc      命令行式计算器（quit离开）
-ls      显示文件夹（-a 显示所有  -l 显示详细的信息）
-cd      切换文件夹
-pwd     显示当前的文件夹路径
-mkdir   创建一个文件夹
-rmdir   删除一个空文件夹
-rm -f   删除一个文件夹以及里面的内容
-cp      复制文件夹（不同的执行者产生的结果有差异）
-mv      移动文件夹或者修改名字
-touch   创建一个空白文档
-cat     查看文档
-tac     查看文档（倒序输出）
-nl      查看文档，并显示行数
-more    以部分显示的方式查看文档（只支持PgDn查看下一页）
-less    以显示一个窗口内容查看文档（支持PgUp和PgDn）
-head    查看文档前十行
-tail    产看文档后十行
-file    查看文件信息(例如文本的编码信息)
-gcc(选项)(参数)
+`bc`      命令行式计算器（quit离开）
+`ls`     显示文件夹（-a 显示所有  -l 显示详细的信息）
+`cd`      切换文件夹
+`pwd`     显示当前的文件夹路径
+`mkdir`   创建一个文件夹
+`rmdir`   删除一个空文件夹
+`rm -f`   删除一个文件夹以及里面的内容
+`cp`      复制文件夹（不同的执行者产生的结果有差异）
+`mv `     移动文件夹或者修改名字
+`touch`   创建一个空白文档
+`cat`     查看文档
+`tac`     查看文档（倒序输出）
+`nl`      查看文档，并显示行数
+`more`    以部分显示的方式查看文档（只支持PgDn查看下一页）
+`less`    以显示一个窗口内容查看文档（支持PgUp和PgDn）
+`head`    查看文档前十行
+`tail`    产看文档后十行
+`file`    查看文件信息(例如文本的编码信息)
+`gcc`(选项)(参数)
 -o:指定生成的输出文件
 -E:仅执行编译预处理
 -S:讲C代码转换为汇编代码
 -wall:显示警告信息
 -c:仅执行编译操作,不进行链接操作
 
-inxi -Fxz   查看系统详细信息
-smartctl -A /dev/sda	查看磁盘使用情况
+`inxi -Fxz `  查看系统详细信息
+`smartctl -A /dev/sda`	查看磁盘使用情况
 
 xfce警告声音设置：
 关闭：sudo rmmod pcspkr，开启：sudo modprobe pcspkr
 compton 解决画面撕裂问题,替换默认的渲染器,使用compton渲染,使用compton -o 0,使阴影边框消失
 
-#### tee
+#### `tee`
 
 - 用途说明
 
@@ -50,7 +50,7 @@ tee - # 输出到标准输出两次
 tee file1 file2 - # 输出到标准两次，同时保存到file1和file2中
 ```
 
-#### cat
+#### `cat`
 
 以下`<file>`代表文件名
 
@@ -100,7 +100,7 @@ hello world2
 
 
 
-#### useradd
+#### `useradd`
 
 添加用户
 
@@ -117,7 +117,7 @@ hello world2
 
 
 
-> 如果新创建的用户不能使用tab不全
+> 如果新创建的用户不能使用tab补全
 
 可能的原因： 	`useradd`用户后默认的`shell`是`sh`，而不是`bash shell`。
 
@@ -177,7 +177,7 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
-#### userdel
+#### `userdel`
 
 删除用户
 
@@ -191,7 +191,7 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
-#### passwd
+#### `passwd`
 
 修改或初始用户密码
 
@@ -203,7 +203,7 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
-#### dirs
+#### `dirs`
 
 显示目录栈
 
@@ -215,7 +215,7 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
-#### pushd
+#### `pushd`
 
 `pushd`执行最后，默认会执行一个`dirs`命令来显示目录栈的内容。
 
@@ -243,7 +243,7 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
-#### popd
+#### `popd`
 
 执行`popd`后，默认会执行`dirs`显示目录栈的内容。
 
@@ -267,7 +267,7 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
-#### nohup
+#### `nohup`
 
 不挂断地运行命令。
 
@@ -285,39 +285,106 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
-#### netstat
+#### `netstat`
 
 `netstat -nat`：查看端口使用情况
 
 
 
-#### update.rc
+#### `update.rc`
 
 设置开机脚本
 
 
 
-#### sed
+#### `sed`
 
 
 
 
 
-#### grep
+#### `grep`
 
 `grep -v grep`:过滤含有`grep`的行
 
 
 
-#### ps
+#### `ps`
 
 查询进程
 
 
 
-#### awk
+#### `awk`
 
 字符串分割
+
+
+
+#### `ldd`
+
+**`ldd`命令**用于打印程序或者库文件所依赖的共享库列表。
+
+**语法**
+
+```
+ldd(选项)(参数)
+```
+
+**选项**
+
+```
+--version：打印指令版本号；
+-v：详细信息模式，打印所有相关信息；
+-u：打印未使用的直接依赖；
+-d：执行重定位和报告任何丢失的对象；
+-r：执行数据对象和函数的重定位，并且报告任何丢失的对象和函数；
+--help：显示帮助信息。
+```
+
+**参数**
+
+文件：指定可执行程序或者文库。
+
+
+
+### dig
+
+查询域名解析
+
+> archLinux `dnsutils`包提供该命令
+
+使用系统默认dns查询
+
+```
+dig www.baidu.com
+```
+
+指定dns服务器查询
+
+```
+dig @8.8.8.8 www.baidu.com
+```
+
+
+
+### nsloookup
+
+查询域名解析
+
+使用系统默认dns查询
+
+```
+nslookup www.baidu.com
+```
+
+指定dns服务器查询
+
+```
+nslookup www.baidu.com 114.114.114.114
+```
+
+
 
 
 
@@ -346,6 +413,48 @@ ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1081 %h %p" user@host
 ```shell
 ssh -o ServerAliveInterval=60 -o ProxyCommand="nc -X 5 -x 127.0.0.1:1081 %h %p" user@host
 ```
+
+#### ssh本地端口转发
+
+本地转发使你可以通过 ssh 连接来建立可通过远程系统访问的端口。该端口在系统上显示为本地端口（因而称为“本地转发”）。
+
+```
+本地转发机制：
+    -L localport:remotehost:remotehostportsshserver
+ 
+选项：
+-f 后台启用
+-N 不打开远程shell，处于等待状态
+-g 启用网关功能
+```
+
+假设你的网络应用在 remote.example.com 的 8000 端口上运行。要将那个系统的 8000 端口本地转发到你系统上的 8000 端口，请在开始会话时将 -L 选项与 ssh 结合使用：
+
+```
+$ ssh -L 8000:localhost:8000 remote.example.com
+```
+
+> 记一次使用本地端口转发连接mysql的坑:
+>
+> mysql默认不指定host时使用的是localhost, 此时通过ssh隧道连接mysql会出现访问被拒, 但是指定host为127.0.0.1 却能连接上.
+
+#### ssh远程端口转发
+
+远程端口转发使你可以通过 ssh 连接从本地系统建立端口的隧道，并使该端口在远程系统上可用。
+
+可以实现内网穿透功能
+
+```
+ssh -R sshserverport:remotehost:remotehostportsshserver
+```
+
+远程端口转发使你可以通过 ssh 连接从本地系统建立端口的隧道，并使该端口在远程系统上可用。在开始 ssh 会话时，只需使用 -R 选项：
+
+```
+$ ssh -R 6000:localhost:5000 remote.example.com
+```
+
+现在，当在公司防火墙内的朋友打开浏览器时，他们可以进入 `http://remote.example.com:6000` 查看你的工作。就像在本地端口转发示例中一样，通信通过 ssh 会话安全地进行。
 
 
 

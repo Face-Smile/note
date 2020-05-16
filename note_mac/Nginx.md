@@ -110,3 +110,65 @@
       ```
    
    3. 保存并关闭文件。所有安装的证书将会自动重新生成，并自动重载生效。
+
+
+
+
+
+#### 80 端口被禁时，手动生成证书
+
+通过使用dns txt记录来完成验证
+
+命令
+
+```
+certbot certonly --manual --preferred-challenge dns -d bzdmx.goodgoodstudy.gq
+```
+
+然后根据提示添加DNS TXT记录，添加后命令行回车确认即可生成证书。
+
+```
+root@ecs-sn3-medium-2-linux-20191218140512:~# certbot certonly --manual --preferred-challenge dns -d bzdmx.goodgoodstudy.gq
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator manual, Installer None
+Cert is due for renewal, auto-renewing...
+Renewing an existing certificate
+Performing the following challenges:
+dns-01 challenge for bzdmx.goodgoodstudy.gq
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NOTE: The IP of this machine will be publicly logged as having requested this
+certificate. If you're running certbot in manual mode on a machine that is not
+your server, please ensure you're okay with that.
+
+Are you OK with your IP being logged?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(Y)es/(N)o: y
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please deploy a DNS TXT record under the name
+_acme-challenge.bzdmx.goodgoodstudy.gq with the following value:
+
+iLBaJNHW5uh5ZwBprSMmHjTkzC401XfdiskUTA7Mwjw
+
+Before continuing, verify the record is deployed.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Press Enter to Continue
+Waiting for verification...
+Cleaning up challenges
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/bzdmx.goodgoodstudy.gq/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/bzdmx.goodgoodstudy.gq/privkey.pem
+   Your cert will expire on 2020-07-02. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot
+   again. To non-interactively renew *all* of your certificates, run
+   "certbot renew"
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+```
+

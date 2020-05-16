@@ -1,6 +1,16 @@
-### SQL语句
+## 数据类型
 
-#### 用户管理
+![image-20191123144626637](MySQL_note/image-20191123144626637.png)
+
+![image-20191123144953317](MySQL_note/image-20191123144953317.png)
+
+
+
+
+
+## SQL语句
+
+### 用户管理
 
 ##### 创建用户
 
@@ -361,6 +371,212 @@ The statement permits these role specifiers:
 
 
 
+### 数据库
+
+![image-20191123150905448](MySQL_note/image-20191123150905448.png)
+
+#### 删除数据库
+
+![image-20191123150823078](MySQL_note/image-20191123150823078.png)
+
+
+
+
+
+### 数据表
+
+![image-20191123151031060](MySQL_note/image-20191123151031060.png)
+
+![image-20191123152257867](MySQL_note/image-20191123152257867.png)
+
+
+
+#### 外键
+
+- 添加外键
+
+![image-20191125200602424](MySQL_note/image-20191125200602424.png)
+
+
+
+
+
+- 删除外键
+
+![image-20191125200457339](MySQL_note/image-20191125200457339.png)
+
+
+
+#### 视图
+
+![image-20191125213024199](MySQL_note/image-20191125213024199.png)
+
+![image-20191125213311743](MySQL_note/image-20191125213311743.png)
+
+
+
+
+
+
+
+### 数据操作
+
+![image-20191123153431624](MySQL_note/image-20191123153431624.png)
+
+#### 增加
+
+##### 使用自动增长值的方式
+
+![image-20191123154115902](MySQL_note/image-20191123154115902.png)
+
+##### 枚举的插入方式
+
+- 使用数值
+
+![image-20191123154149248](MySQL_note/image-20191123154149248.png)
+
+- 使用枚举值
+
+![image-20191123154236827](MySQL_note/image-20191123154236827.png)
+
+
+
+##### `create....select`创建表同时插入数据
+
+![image-20191125173540444](MySQL_note/image-20191125173540444.png)
+
+> 注意: 查询表的结果字段名必须和创建表中的字段名一样
+
+
+
+
+
+
+
+#### 查询
+
+![image-20191123155248836](MySQL_note/image-20191123155248836.png)
+
+
+
+##### 消除重复行
+
+![image-20191123162235928](MySQL_note/image-20191123162235928.png)
+
+
+
+##### 模糊查询
+
+######  `like`
+
+![image-20191123171512805](MySQL_note/image-20191123171512805.png)
+
+
+
+`rlike`
+
+![image-20191123171657947](MySQL_note/image-20191123171657947.png)
+
+
+
+
+
+##### 范围查询
+
+- 非连续范围
+
+![image-20191123211747288](MySQL_note/image-20191123211747288.png)
+
+- 不 非连续范围
+
+![image-20191123212308083](MySQL_note/image-20191123212308083.png)
+
+- 连续范围
+
+![image-20191123212430889](MySQL_note/image-20191123212430889.png)
+
+- 不在一个连续范围
+
+![image-20191123212603758](MySQL_note/image-20191123212603758.png)
+
+
+
+- 空判断
+
+![image-20191123212813295](MySQL_note/image-20191123212813295.png)
+
+
+
+##### 排序
+
+![image-20191123213336758](MySQL_note/image-20191123213336758.png)
+
+![image-20191123213451116](MySQL_note/image-20191123213451116.png)
+
+
+
+##### 聚合函数
+
+![image-20191123214624977](MySQL_note/image-20191123214624977.png)
+
+![image-20191123214803700](MySQL_note/image-20191123214803700.png)
+
+![image-20191123214953525](MySQL_note/image-20191123214953525.png)
+
+
+
+##### 分组
+
+![image-20191123230257852](MySQL_note/image-20191123230257852.png)
+
+![image-20191123231117004](MySQL_note/image-20191123231117004.png)
+
+
+
+![image-20191123231010773](MySQL_note/image-20191123231010773.png)
+
+
+
+##### 分页
+
+![image-20191123232224923](MySQL_note/image-20191123232224923.png)
+
+
+
+#####  连接查询
+
+![image-20191123234334545](MySQL_note/image-20191123234334545.png)
+
+
+
+
+
+#### 删除
+
+- 物理删除
+
+![image-20191123160437336](MySQL_note/image-20191123160437336.png)
+
+
+
+- 逻辑删除
+
+![image-20191123160453092](MySQL_note/image-20191123160453092.png)
+
+
+
+
+
+
+
+### mysql 内置函数
+
+`select version()` 查看MySQL版本
+
+`select now()` 显示当前时间
+
+`select database()` 显示当前的数据库是哪个
+
 ### MySQL 储存引擎
 
 #### 什么是存储引擎？
@@ -489,6 +705,219 @@ Archive是归档的意思，在归档之后很多的高级功能就不再支持�
 
 
 
+## 事务
+
+事务的四大特性(简称ACID)
+
+- 原子性(Atomicity)
+- 一致性(Consistency)
+- 隔离性(Isolation)
+- 持久性(Durability)
+
+![image-20191125214310571](MySQL_note/image-20191125214310571.png)
+
+![image-20191125220442018](MySQL_note/image-20191125220442018.png)
+
+
+
+## 索引
+
+### 索引是什么
+
+![image-20191125222215125](MySQL_note/image-20191125222215125.png)
+
+### 索引目的
+
+![image-20191125222259310](MySQL_note/image-20191125222259310.png)
+
+### 索引的使用
+
+![image-20191125224717391](MySQL_note/image-20191125224717391.png)
+
+### 索引demo
+
+![image-20191125225829214](MySQL_note/image-20191125225829214.png)
+
+![image-20191125225942880](MySQL_note/image-20191125225942880.png)
+
+
+
+
+
+## mysql 备份和恢复
+
+- 备份
+
+```
+mysqldump -u 用户名 -p 数据库名 > 备份文件名
+```
+
+- 恢复
+
+```
+mysql -u 用户名 -p 新数据库名 < 备份文件名
+```
+
+
+
+## mysql 主从模式
+
+### 1. 配置主从同步的基本步骤
+
+![image-20191127210800256](MySQL_note/image-20191127210800256.png)
+
+### 2.  配置主从同步的方法
+
+#### 1. 备份主服务器原有数据到从服务器
+
+如果设置主从同步钱,主服务器已有大量数据,可以使用mysqldump进行数据备份并还原到从服务器以实现数据的复制.
+
+#### 2. 配置主服务器
+
+##### 1. 编辑`mysqld`的配置文件,设置`log_bin`和`server_id`
+
+![image-20191127215034790](MySQL_note/image-20191127215034790.png)
+
+##### 2. 重启`mysql`服务
+
+```
+sudo service mysql restart
+```
+
+
+
+##### 3. 登入主服务器中的`mysql`, 创建用于从服务器同步数据使用的账号
+
+- 创建slave账户用于同步数据库账户
+
+```mysql
+GRANT REPLICATION SLAVE ON *.* TO 'slave'@'%' identified by 'slave';
+```
+
+- 刷新
+
+```mysql
+flush privileges;
+```
+
+
+
+##### 4. 获取主服务器的二进制信息
+
+```mysql
+show master status;
+```
+
+![image-20191127221928065](MySQL_note/image-20191127221928065.png)
+
+File 为使用的日志文件名字, Position为使用的文件位置.这两个参数配置从服务器时需要用到
+
+
+
+#### 3. 配置从服务器
+
+##### 1. 编辑`mysql`配置文件`my.cnf` 或者`my.ini`
+
+配置`server-id` 参数, **这个参数值与其他mysql服务器不能重复**
+
+
+
+##### 2. 重启`mysql`服务
+
+```
+service mysql restart
+```
+
+
+
+##### 3. 设置连接master主服务器
+
+```mysql
+change master to master_host='s01', master_user='slave', master_password='slave', master_log_file='mysql-bin.000001', master_log_pos=120;
+```
+
+- master_host : 主服务器的IP地址
+- master_log_file: 主服务器日志文件名
+- master_log_pos : 主服务器日志文件的位置
+
+
+
+##### 4. 开启同步, 查看同步状态
+
+```
+start slave; # 开启同步
+show slave status \G; # 查看同步状态, \G参数表示切换显示方式
+```
+
+```
+mysql> start slave;
+Query OK, 0 rows affected (0.46 sec)
+
+mysql> show slave status \G;
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: s01
+                  Master_User: slave
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: mysql-bin.000002
+          Read_Master_Log_Pos: 120
+               Relay_Log_File: s02-relay-bin.000003
+                Relay_Log_Pos: 283
+        Relay_Master_Log_File: mysql-bin.000002
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+              Replicate_Do_DB: 
+          Replicate_Ignore_DB: 
+           Replicate_Do_Table: 
+       Replicate_Ignore_Table: 
+      Replicate_Wild_Do_Table: 
+  Replicate_Wild_Ignore_Table: 
+                   Last_Errno: 0
+                   Last_Error: 
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 120
+              Relay_Log_Space: 1466
+              Until_Condition: None
+               Until_Log_File: 
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: No
+           Master_SSL_CA_File: 
+           Master_SSL_CA_Path: 
+              Master_SSL_Cert: 
+            Master_SSL_Cipher: 
+               Master_SSL_Key: 
+        Seconds_Behind_Master: 0
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error: 
+               Last_SQL_Errno: 0
+               Last_SQL_Error: 
+  Replicate_Ignore_Server_Ids: 
+             Master_Server_Id: 1
+                  Master_UUID: 654542dd-d2e1-11e9-81f9-080027b15ad1
+             Master_Info_File: /data56/master.info
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: Slave has read all relay log; waiting for the slave I/O thread to update it
+           Master_Retry_Count: 86400
+                  Master_Bind: 
+      Last_IO_Error_Timestamp: 
+     Last_SQL_Error_Timestamp: 
+               Master_SSL_Crl: 
+           Master_SSL_Crlpath: 
+           Retrieved_Gtid_Set: 
+            Executed_Gtid_Set: 
+                Auto_Position: 0
+1 row in set (0.00 sec)
+```
+
+下面这个显示为yes, 则表示开启成功
+
+![image-20191127230626326](MySQL_note/image-20191127230626326.png)
+
+
+
 ## Mysql 查询已连接的用户信息
 
 终端输入:
@@ -531,6 +960,63 @@ LIKE语句，表示匹配的名称
 
 ```shell
 SHOW CREATE {PROCEDURE | FUNCTION} sp_name 
+```
+
+
+
+
+
+## MySQL 日志
+
+### 查看MySQL配置文件的位置
+
+```shell
+mysqld --verbose --help | grep -A 1 'Default options'
+```
+
+### 开启日志
+
+mysql有四种日志：
+
+所有日志：general log
+
+慢查询日志：slow log
+
+二进制日志：binary log
+
+错误日志：error log
+
+windows下在my.ini里配置，linux下在my.cnf里配置。
+
+general log记录用户所有的操作。
+
+```
+general_log_file    = /var/log/mysql/mysql.log
+general_log         = 1
+```
+
+slow log记录查询时间超过规定时间的语句。
+
+```
+slow-query-log=1
+slow_query_log_file="D:/mysql/logs/slow.log"
+long_query_time=10 //规定的查询时间
+```
+
+通过 `show variables like "%slow%";`查看是否开启
+
+binary log也叫作变更日志，主要用于记录修改数据或有可能引起数据改变的mysql语句，并且记录了语句发生时间、执行时长、操作的数据等等。所以说通过二进制日志可以查询mysql数据库中进行了哪些变化。一般大小体积上限为1G，**通过binary log可以恢复被删除的数据**。
+
+```
+log-bin="D:/mysql/logs/bin-log.log"
+```
+
+通过 `show variables like "%log_bin%";` 查看是否开启
+
+error log记录错误日志
+
+```
+log-error="D:/mysql/logs/error.log"
 ```
 
 
@@ -633,3 +1119,20 @@ cnx2 = mysql.connector.connect(buffered=True)
 ```
 这么做是把结果集缓存在服务器端，不知道数据量太大请求太多的时候会不会造成服务器端负荷过大卡死的情况。不过对于本地小项目来说肯定是没啥影响。
 
+#### MySQL 浮点数插入表中后查询的值有误差
+
+float类型可以存浮点数（即小数类型），但是float有个缺点的，当不指定小数位数的时候，那么它就会出现小数位数与想要的不一致，导致“报错”（此错误可能是位数不对，也可能是数值不对）。
+备注：所以在创建浮点类型的时候必须指定小数位数，float(m,d)，m表示的是最大长度，d表示的显示的小数位数，所以在初始化的过程中指点一下即可。
+
+
+
+
+
+MySQL 设置连接响应超时时间wait_timeout参数
+
+```shell
+set global interactive_timeout = 超时时间(单位：s)
+set global wait_timeout = 超时时间(单位：s)
+```
+
+如果只设置当前连接可以去掉gobal

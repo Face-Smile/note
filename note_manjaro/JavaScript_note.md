@@ -22,6 +22,49 @@ Javascript 文件的扩展名是`.js`。
 
 
 
+## JS 操作元素方法
+
+可以使用内置对象document上的getElementById方法来获取页面上设置了id属性的元素，获取到的是一个html对象，然后将它赋值给一个变量，比如：
+
+```
+<script type="text/javascript">
+    var oDiv = document.getElementById('div1');
+</script>
+....
+<div id="div1">这是一个div元素</div>
+```
+
+上面的语句，如果把javascript写在元素的上面，就会出错，因为页面上从上往下加载执行的，javascript去页面上获取元素div1的时候，元素div1还没有加载，解决方法有两种：
+
+第一种方法：将javascript放到页面最下边
+
+```
+....
+<div id="div1">这是一个div元素</div>
+....
+
+<script type="text/javascript">
+    var oDiv = document.getElementById('div1');
+</script>
+</body>
+```
+
+第二种方法：将javascript语句放到window.onload触发的函数里面,获取元素的语句会在页面加载完后才执行，就不会出错了。
+
+```
+<script type="text/javascript">
+    window.onload = function(){
+        var oDiv = document.getElementById('div1');
+    }
+</script>
+
+....
+
+<div id="div1">这是一个div元素</div>
+```
+
+
+
 ## JS 语句
 
 - 分号 `;`
@@ -197,6 +240,8 @@ document.write("<h1>This is a heading</h1>");
 
 - 通过id来访问HTML元素
 
+
+
 ##### (1) innerHTML
 
 - 改变HTML元素的内容，讲覆盖标签元素原有的内容
@@ -206,6 +251,64 @@ document.write("<h1>This is a heading</h1>");
   ```javascript
   document.getElementById('id_name').innerHTML="Hello World!";
   ```
+
+
+
+## JS 封闭函数
+
+封闭函数是javascript中匿名函数的另外一种写法，创建一个一开始就执行而不用命名的函数。
+
+一般定义的函数和执行函数：
+
+```
+function myalert(){
+    alert('hello!');
+};
+
+myalert();
+```
+
+封闭函数：
+
+```
+(function myalert(){
+    alert('hello!');
+})();
+```
+
+还可以在函数定义前加上“~”和“!”等符号来定义匿名函数
+
+```
+!function myalert(){
+    alert('hello!');
+}()
+```
+
+**封闭函数的好处**
+封闭函数可以创造一个独立的空间，在封闭函数内定义的变量和函数不会影响外部同名的函数和变量，可以避免命名冲突，在页面上引入多个js文件时，用这种方式添加js文件比较安全，比如：
+
+```
+var iNum01 = 12;
+function myalert(){
+    alert('hello!');
+}
+(function(){
+    var iNum01 = 24;
+    function myalert(){
+        alert('hello!world');
+    }
+    alert(iNum01);
+    myalert()
+})()
+alert(iNum01);
+myalert();
+```
+
+> 有时候会在封闭函数前加一个`;`，是为了防止压缩js文件时，出现某些没加封号结尾的其他js语句和它并在一起出现语法错误。
+
+
+
+
 
 
 
@@ -289,6 +392,36 @@ var patt=/pattern/modifiers;
 
 ```
 (?<!str)$
+```
+
+
+
+
+
+## JS常用内置对象
+
+1、document
+
+```
+document.getElementById //通过id获取元素
+document.getElementsByTagName //通过标签名获取元素
+document.referrer  //获取上一个跳转页面的地址(需要服务器环境)
+```
+
+2、location
+
+```
+window.location.href  //获取或者重定url地址
+window.location.search //获取地址参数部分
+window.location.hash //获取页面锚点或者叫哈希值
+```
+
+3、Math
+
+```
+Math.random 获取0-1的随机数
+Math.floor 向下取整
+Math.ceil 向上取整
 ```
 
 
