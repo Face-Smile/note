@@ -2819,24 +2819,17 @@ public class Test {
 
 　　如果锁具备可重入性，则称作为 可重入锁 。像 synchronized 和 ReentrantLock 都是可重入锁，可重入性实际上表明了 锁的分配粒度：基于线程的分配，而不是基于方法调用的分配。举个简单的例子，当一个线程执行到某个synchronized方法时，比如说method1，而在method1中会调用另外一个synchronized方法method2，此时线程不必重新去申请锁，而是可以直接执行方法method2。
 
-    class MyClass {
-        publicsynchronizedvoidmethod1() {
-            method2();
-        }
-    
-        publicsynchronizedvoidmethod2() {
-    
-        }
+```java
+class MyClass {
+    public synchronized void method1() {
+        method2();
     }
-    - 1
-    - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    - 7
-    - 8
-    - 9
+
+    public synchronized void method2() {
+
+    }
+}
+```
 
 
 ​    
@@ -2865,118 +2858,65 @@ public class Test {
 
 Case : 公平锁
 
-    publicclassRunFair {publicstaticvoidmain(String[] args) throws InterruptedException {
-            final Service service = new Service(true);     // 公平锁，设为 true
-            Runnable runnable = new Runnable() {
-                @Overridepublicvoidrun() {
-                    System.out.println("★线程" + Thread.currentThread().getName()
-                            + "运行了");
-                    service.serviceMethod();
-                }
-            };
-    
-            Thread[] threadArray = new Thread[10];
-            for (int i = 0; i < 10; i++) 
-                threadArray[i] = new Thread(runnable);
-    
-            for (int i = 0; i < 10; i++) 
-                threadArray[i].start(); 
+```java
+public class RunFair {
+    public static void main(String[] args) throws InterruptedException {
+        final Service service = new Service(true);     // 公平锁，设为 true
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("★线程" + Thread.currentThread().getName()
+                        + "运行了");
+                service.serviceMethod();
+            }
+        };
+
+        Thread[] threadArray = new Thread[10];
+        for (int i = 0; i < 10; i++) 
+            threadArray[i] = new Thread(runnable);
+
+        for (int i = 0; i < 10; i++) 
+            threadArray[i].start(); 
+    }
+}
+class Service {
+    private ReentrantLock lock;
+    public Service(boolean isFair) {
+        super();
+        lock = new ReentrantLock(isFair);
+    }
+    public void serviceMethod() {
+        try {
+            lock.lock();
+            System.out.println("ThreadName=" + Thread.currentThread().getName()
+                    + "获得锁定");
+        } finally {
+            lock.unlock();
         }
     }
-    class Service {
-        private ReentrantLock lock;
-        publicService(boolean isFair) {
-            super();
-            lock = new ReentrantLock(isFair);
-        }
-        publicvoidserviceMethod() {
-            try {
-                lock.lock();
-                System.out.println("ThreadName=" + Thread.currentThread().getName()
-                        + "获得锁定");
-            } finally {
-                lock.unlock();
-            }
-        }
-    }/* Output: 
-            ★线程Thread-0运行了
-            ★线程Thread-1运行了
-            ThreadName=Thread-1获得锁定
-            ThreadName=Thread-0获得锁定
-            ★线程Thread-2运行了
-            ThreadName=Thread-2获得锁定
-            ★线程Thread-3运行了
-            ★线程Thread-4运行了
-            ThreadName=Thread-4获得锁定
-            ★线程Thread-5运行了
-            ThreadName=Thread-5获得锁定
-            ThreadName=Thread-3获得锁定
-            ★线程Thread-6运行了
-            ★线程Thread-7运行了
-            ThreadName=Thread-6获得锁定
-            ★线程Thread-8运行了
-            ★线程Thread-9运行了
-            ThreadName=Thread-7获得锁定
-            ThreadName=Thread-8获得锁定
-            ThreadName=Thread-9获得锁定
-    *///:~
-    - 1
-    - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    - 7
-    - 8
-    - 9
-    - 10
-    - 11
-    - 12
-    - 13
-    - 14
-    - 15
-    - 16
-    - 17
-    - 18
-    - 19
-    - 20
-    - 21
-    - 22
-    - 23
-    - 24
-    - 25
-    - 26
-    - 27
-    - 28
-    - 29
-    - 30
-    - 31
-    - 32
-    - 33
-    - 34
-    - 35
-    - 36
-    - 37
-    - 38
-    - 39
-    - 40
-    - 41
-    - 42
-    - 43
-    - 44
-    - 45
-    - 46
-    - 47
-    - 48
-    - 49
-    - 50
-    - 51
-    - 52
-    - 53
-    - 54
-    - 55
-    - 56
-    - 57
+}/* Output: 
+        ★线程Thread-0运行了
+        ★线程Thread-1运行了
+        ThreadName=Thread-1获得锁定
+        ThreadName=Thread-0获得锁定
+        ★线程Thread-2运行了
+        ThreadName=Thread-2获得锁定
+        ★线程Thread-3运行了
+        ★线程Thread-4运行了
+        ThreadName=Thread-4获得锁定
+        ★线程Thread-5运行了
+        ThreadName=Thread-5获得锁定
+        ThreadName=Thread-3获得锁定
+        ★线程Thread-6运行了
+        ★线程Thread-7运行了
+        ThreadName=Thread-6获得锁定
+        ★线程Thread-8运行了
+        ★线程Thread-9运行了
+        ThreadName=Thread-7获得锁定
+        ThreadName=Thread-8获得锁定
+        ThreadName=Thread-9获得锁定
+*///:~
+```
 
 
 ​    
@@ -2985,57 +2925,34 @@ Case : 公平锁
 
 Case: 非公平锁
 
-    publicclassRunFair {publicstaticvoidmain(String[] args) throws InterruptedException {
-            final Service service = new Service(false);  // 非公平锁，设为 false
-            ...
-    }/* Output: 
-            ★线程Thread-0运行了
-            ThreadName=Thread-0获得锁定
-            ★线程Thread-2运行了
-            ThreadName=Thread-2获得锁定
-            ★线程Thread-6运行了
-            ★线程Thread-1运行了
-            ThreadName=Thread-6获得锁定
-            ★线程Thread-3运行了
-            ThreadName=Thread-3获得锁定
-            ★线程Thread-7运行了
-            ThreadName=Thread-7获得锁定
-            ★线程Thread-4运行了
-            ThreadName=Thread-4获得锁定
-            ★线程Thread-5运行了
-            ThreadName=Thread-5获得锁定
-            ★线程Thread-8运行了
-            ThreadName=Thread-8获得锁定
-            ★线程Thread-9运行了
-            ThreadName=Thread-9获得锁定
-            ThreadName=Thread-1获得锁定
-    *///:~
-    - 1
-    - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    - 7
-    - 8
-    - 9
-    - 10
-    - 11
-    - 12
-    - 13
-    - 14
-    - 15
-    - 16
-    - 17
-    - 18
-    - 19
-    - 20
-    - 21
-    - 22
-    - 23
-    - 24
-    - 25
-    - 26
+```java
+public class RunFair {
+    public static void main(String[] args) throws InterruptedException {
+        final Service service = new Service(false);  // 非公平锁，设为 false
+        ...
+}/* Output: 
+        ★线程Thread-0运行了
+        ThreadName=Thread-0获得锁定
+        ★线程Thread-2运行了
+        ThreadName=Thread-2获得锁定
+        ★线程Thread-6运行了
+        ★线程Thread-1运行了
+        ThreadName=Thread-6获得锁定
+        ★线程Thread-3运行了
+        ThreadName=Thread-3获得锁定
+        ★线程Thread-7运行了
+        ThreadName=Thread-7获得锁定
+        ★线程Thread-4运行了
+        ThreadName=Thread-4获得锁定
+        ★线程Thread-5运行了
+        ThreadName=Thread-5获得锁定
+        ★线程Thread-8运行了
+        ThreadName=Thread-8获得锁定
+        ★线程Thread-9运行了
+        ThreadName=Thread-9获得锁定
+        ThreadName=Thread-1获得锁定
+*///:~
+```
 
 
 ​    
