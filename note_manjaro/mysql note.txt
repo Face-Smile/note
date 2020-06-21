@@ -12,3 +12,26 @@
 
 
 
+下面将通过一些案例介绍如何使用MySQL提供的工具命令进行逻辑备份。使用 mysqldump 备份数据库，默认该工具会将SQL语句信息导出至标准输出，可以通过重定向将输出保存至文件：
+
+（1）备份所有的数据库
+
+` mysqldump -u root -p --all-databases > bak.sql`
+
+（2）备份指定的数据库db1、db2以及db3
+
+`mysqldump -u root -p --databases db1 db2 db3 > bak.sql`
+
+（3）备份db数据库，当仅备份一个数据库时，--databases可以省略
+
+`mysqldump -u root -p db4 > bak.sql`
+
+`mysqldump -u root -p --databases db4 > bak.sql`
+
+两者之间的差别在于不使用 --databases 选项，则备份输出信息中不会包含CREATE DATABASE或USE语句。不使用 --databases 选项备份的数据文件，在后期进行数据还原操作时，如果该数据库不存在，必须先创建该数据库。
+
+使用mysql命令读取备份文件，实现数据还原功能：
+
+`mysql -u root -p < bak.sql`
+
+`mysql -u root -p db4 < bak.sq1`
