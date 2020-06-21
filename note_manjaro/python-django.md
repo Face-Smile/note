@@ -189,7 +189,7 @@ Models.ForeignKey可以建立两个模型类之间一对多的关系，django在
 
 ### 3. 模型类生成表
 
-#### 1. 生成迁移文件
+#### 1. 生成迁移文件（创建更新记录）
 
 ```
 python manage.py makemigrations
@@ -219,7 +219,7 @@ python manage.py makemigrations
 
 
 
-#### 2. 执行迁移生成表
+#### 2. 执行迁移生成表（同步更新记录到到数据库）
 
 ```
 python manage.py migrate
@@ -359,6 +359,10 @@ hbook = models.ForeignKey('BookInfo')
 b = BookInfo.objects.get(id=2)
 b.heroinfo_set.all() #查询出b图书中所有英雄人物的信息
 ```
+
+
+
+
 
 
 
@@ -663,6 +667,25 @@ def index(request):
 
 ## 1. Django数据库配置
 
+Django `DATABASES`默认需要配置一个`default`数据库，更多请参考：[Django settings](https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-DATABASES).
+
+支持的数据库postgresql，mysql，sqlite3，oracle等数据库
+
+### 多个数据库配置
+
+Django可以配置多个数据库，但是必须有一个`default`配置的数据库（其配置可以为空，即一个空字典）。如果你想对不同应用或者模型类使用不同的数据库，可以使用数据库路由。（参考博客：https://www.cnblogs.com/DJRemix/p/11584563.html）
+
+#### 同步你的数据库
+
+[`migrate`](http://doc.codingdict.com/django/ref/django-admin.html#django-admin-migrate) 管理命令一次操作一个数据库。默认情况下，它在`default` 数据库上操作，但是通过提供一个[`--database`](http://doc.codingdict.com/django/ref/django-admin.html#django-admin-option---database) 参数，你可以告诉[`migrate`](http://doc.codingdict.com/django/ref/django-admin.html#django-admin-migrate) 同步一个不同的数据库。因此，为了同步所有模型到我们示例中的所有数据库，你将需要调用：
+
+```shell
+$ ./manage.py migrate
+$ ./manage.py migrate --database=users
+```
+
+如果你不想每个应用都被同步到同一台数据库上，你可以定义一个[数据库路由](http://doc.codingdict.com/django/topics/db/multi-db.html?spm=a2c4e.10696291.0.0.324f19a4oYhfzQ#topics-db-multi-db-routing)，它实现一个策略来控制特定模型的访问性。
+
 
 
 ### 默认数据库sqlite3
@@ -688,27 +711,12 @@ DATABASES = {
 
 **使用MySQL，要手动创建数据库，Django不会自动创建。**
 
-#### 配置数据库
+#### 方式一
 
-配置项目中`settings.py`文件
-
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',  # 使用的数据库类型
-        'NAME': 'bj18',  # 数据库的名字，数据库必须手动创建
-        'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'facesmile',  # 数据库密码
-        'HOST': 'localhost',  # 数据库所在主机
-        'PORT': 3306,  # 数据库服务运行的端口
-
-    }
-}
-```
-
-#### 安装python连接MySQL的包
+##### 安装python连接MySQL的包
 
 需要安装操作mysql数据库的包，python2环境和python3环境有以下区别。 
+
 - python2需要安装mysql-python:
 
 ```
@@ -727,6 +735,83 @@ python3中安装好pymysql，需要在`test2/__init__.py`中加如下内容：
 import pymysql
 pymysql.install_as_MySQLdb()
 ```
+
+##### 配置数据库
+
+配置项目中`settings.py`文件
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # 使用的数据库类型
+        'NAME': 'bj18',  # 数据库的名字，数据库必须手动创建
+        'USER': 'root',  # 数据库用户名
+        'PASSWORD': 'facesmile',  # 数据库密码
+        'HOST': 'localhost',  # 数据库所在主机
+        'PORT': 3306,  # 数据库服务运行的端口
+
+    }
+}
+```
+
+
+
+#### 方式二(推荐)
+
+##### 安装mysql python连接包, python2,3都可
+
+```
+pip instsll mysqlclient
+```
+
+> 安装错误可以去https://pypi.org/project/mysqlclient/查看系统需要的依赖
+
+##### 配置数据库
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'poem',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': '127.0.0.1',
+        'PORT': 3306,
+    }
+}
+```
+
+
+
+#### 方式三
+
+##### 安装mysql python连接包
+
+```
+pip install mysql-connector-python
+```
+
+
+
+##### 配置数据库
+
+配置项目中的`settings.py`文件
+
+```python
+DATABASES = {
+    'default': {
+        'NAME': 'user_data',
+        'ENGINE': 'mysql.connector.django',
+        'USER': 'mysql_user',
+        'PASSWORD': 'password',
+        'OPTIONS': {
+          'autocommit': True,
+        },
+    }
+}
+```
+
+> 参考：https://dev.mysql.com/doc/connector-python/en/connector-python-django-backend.html
 
 
 
@@ -756,15 +841,17 @@ django会为表创建自动增长的主键列，每个模型只能有一个主�
 
 #### 字段类型
 
-使用时需要引入django.db.models包，字段类型如下：
+使用时需要引入django.db.models包，[字段类型](https://docs.djangoproject.com/en/2.2/ref/models/fields/#field-types)如下：
 
 - AutoField：自动增长的IntegerField，通常不用指定，不指定时Django会自动创建属性名为id的自动增长属性。
+- BigAutoFile: 64位整型。
 - BooleanField：布尔字段，值为True或False。
 - NullBooleanField：支持Null、True、False三种值。
 - CharField(max_length=字符长度)：字符串。
   - 参数max_length表示最大字符个数。
 - TextField：大文本字段，一般超过4000个字符时使用。
 - IntegerField：整数。
+- BigIntegerField：64位整数。
 - DecimalField(max_digits=None, decimal_places=None)：十进制浮点数。
   - 参数max_digits表示总位数。
   - 参数decimal_places表示小数位数。
@@ -775,27 +862,194 @@ django会为表创建自动增长的主键列，每个模型只能有一个主�
   - 参数auto_now_add和auto_now是相互排斥的，组合将会发生错误。
 - TimeField：时间，参数同DateField。
 - DateTimeField：日期时间，参数同DateField。
+- BinaryField：储存二进制原始数据的字段，他可以声明[`bytes`](https://docs.python.org/3/library/stdtypes.html#bytes), [`bytearray`](https://docs.python.org/3/library/stdtypes.html#bytearray)或[`memoryview`](https://docs.python.org/3/library/stdtypes.html#memoryview).Django2.1之前，它不允许`editable=True`。
 - FileField：上传文件字段。
 - ImageField：继承于FileField，对上传的内容进行校验，确保是有效的图片。
 
+
+
+##### 自定义字段
+
+自定义字段需要继承`django.db.models.Field`或它的子类。
+
+为自定义字段添加文档描述
+
+```python
+description = _("String (up to %(max_length)s)")
+```
+
+此例子使用了延迟加载，例如不同长度的`varchar`类型，它的描述不同，当然你可以使用纯字符串，如下：
+
+```python
+description = 'String of Text'
+```
+
+
+
+自定义字段常用方法：
+
+###### `db_type(self, connection)`自定义字段数据库类型、`rel_db_type`自定义关联模型字段数据库类型。
+
+Django会在创建数据库表的时候调用`db_type()`和`rel_db_type()`方法来构造`CREATE TABLE`语句，这些方法也在构造包含此字段的where SQL语句时调用，比如你在利用 QuerySet 方法(`get()`, `filter()`, 和 `exclude()`)检出数据时或将此模型字段作为参数时。
+
+`db_type`用于自定义字段的数据类型，如果你需要自定义数据库中`char`、`int`等类型的长度，可以在此编写代码实现
+
+```python
+# This is a much more flexible example.
+class BetterCharField(models.Field):
+    def __init__(self, max_length, *args, **kwargs):
+        self.max_length = max_length
+        super().__init__(*args, **kwargs)
+
+    def db_type(self, connection):
+        return 'char(%s)' % self.max_length
+
+# In the model:
+class MyModel(models.Model):
+    # ...
+    my_field = BetterCharField(25)
+```
+
+或者根据不同的的数据库返回不同的值：
+
+```python
+class MyDateField(models.Field):
+    def db_type(self, connection):
+        if connection.settings_dict['ENGINE'] == 'django.db.backends.mysql':
+            return 'datetime'
+        else:
+            return 'timestamp'
+```
+
+最后，如果你的列真的要求配置复杂的 SQL，从 [`db_type()`](https://docs.djangoproject.com/zh-hans/2.2/ref/models/fields/#django.db.models.Field.db_type) 返回 `None`。这会让 Django 创建 SQL 的代码跳过该字段。随后你需要负责为该字段在正确的表中以某种方式创建列，这种方式允许你告诉 Django 不处理此事。
+
+
+
+###### to_python、`from_db_value` 数据库值与Python对象互相转换
+
+如果自定义的字段类型数据结构比较字符串、日期、整型或浮点型复杂，你可以通过这两个方法实现数据库值与Python对象互相转换。
+
+`to_python`在反序列化和表单的调用[`clean()`](https://docs.djangoproject.com/en/2.2/ref/models/instances/#django.db.models.Model.clean) 方法验证时调用。
+
+作为通用规则， `to_python` 应该平滑地处理以下参数：
+
+- 一个正确的模型实例对象（本业持续介绍的例子 `Hand` ）。
+- 一个字符串
+- `None` （若字段允许 `null=True`）
+
+在 `HandField` 类中，我们在数据库中以 VARCHAR 字段的形式存储数据，所以我们要能在 `from_db_value()` 中处理字符串和 `None`。在 `to_python()` 中，我们也需要处理 `Hand` 实例:
+
+```python
+import re
+
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+def parse_hand(hand_string):
+    """Takes a string of cards and splits into a full hand."""
+    p1 = re.compile('.{26}')
+    p2 = re.compile('..')
+    args = [p2.findall(x) for x in p1.findall(hand_string)]
+    if len(args) != 4:
+        raise ValidationError(_("Invalid input for a Hand instance"))
+    return Hand(*args)
+
+class HandField(models.Field):
+    # ...
+
+    def from_db_value(self, value, expression, connection):
+        if value is None:
+            return value
+        return parse_hand(value)
+
+    def to_python(self, value):
+        # 处理 Hand实例
+        if isinstance(value, Hand):
+            return value
+        # 值为空
+        if value is None:
+            return value
+		# 处理字符串
+        return parse_hand(value)
+```
+
+> 对于`to_python`方法。如果出错，你应该触发`django.core.exceptions.ValidationError`异常.
+>
+> 如果你定义了`to_python`方法，你还需要定义`get_prep_value`方法
+
+
+
+###### `get_prep_value`:将Python转换为查询值
+
+当你使用数据库需要双向转换，如果你重写了`to_python`方法，你也必须重写`get_prep_value`方法。
+
+
+
+
+
+##### Django 默认字段匹配数据库类型的方式
+
+在`db_type`方法中使用`django.db.connection.data_types`中查找对应的值
+
+```python
+data = self.db_type_parameters(connection)
+try:
+    return connection.data_types[self.get_internal_type()] % data
+except KeyError:
+    return None
+```
+
+`get_internal_type`默认返回字段类名，通过该类名查找`django.db.backends`下对应数据库包中的`base.DatabaseWrapper`类中`data_types`属性来获取字段对应的数据库类型
+
+
+
+##### 字段对应的MySQL数据类型
+
+<table class="table table-bordered table-striped table-condensed" style="font-family:'-apple-system', 'SF UI Text', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif, SimHei, SimSun;font-size:14px;width:852px;"><tbody><tr><th style="margin:0px;vertical-align:middle;">分类</th><th style="margin:0px;vertical-align:middle;">模型属性类型</th><th style="margin:0px;vertical-align:middle;">mysql数据库类型</th></tr><tr><td style="margin:0px;vertical-align:middle;">自增</td><td style="margin:0px;vertical-align:middle;">AutoField</td><td style="margin:0px;vertical-align:middle;">int</td></tr><tr><td rowspan="2" style="margin:0px;vertical-align:middle;">布尔</td><td style="margin:0px;vertical-align:middle;">BooleanField</td><td style="margin:0px;vertical-align:middle;">tinyint</td></tr><tr><td style="margin:0px;vertical-align:middle;">NullBooleanField</td><td style="margin:0px;vertical-align:middle;">tinyint</td></tr><tr><td rowspan="2" style="margin:0px;vertical-align:middle;">字符</td><td style="margin:0px;vertical-align:middle;">CharField</td><td style="margin:0px;vertical-align:middle;">varchar</td></tr><tr><td style="margin:0px;vertical-align:middle;">TextField</td><td style="margin:0px;vertical-align:middle;">longtext</td></tr><tr><td rowspan="3" style="margin:0px;vertical-align:middle;">数字</td><td style="margin:0px;vertical-align:middle;">IntegerField</td><td style="margin:0px;vertical-align:middle;">int</td></tr><tr><td style="margin:0px;vertical-align:middle;">DecimalField</td><td style="margin:0px;vertical-align:middle;">decimal</td></tr><tr><td style="margin:0px;vertical-align:middle;">FloatField</td><td style="margin:0px;vertical-align:middle;">double</td></tr><tr><td rowspan="3" style="margin:0px;vertical-align:middle;">日期和时间</td><td style="margin:0px;vertical-align:middle;">DateField</td><td style="margin:0px;vertical-align:middle;">date</td></tr><tr><td style="margin:0px;vertical-align:middle;">TimeField</td><td style="margin:0px;vertical-align:middle;">time</td></tr><tr><td style="margin:0px;vertical-align:middle;">DateTimeField</td><td style="margin:0px;vertical-align:middle;">datetime</td></tr><tr><td rowspan="2" style="margin:0px;vertical-align:middle;">文件</td><td style="margin:0px;vertical-align:middle;">FileField</td><td style="margin:0px;vertical-align:middle;">varchar</td></tr><tr><td style="margin:0px;vertical-align:middle;">ImageField</td><td style="margin:0px;vertical-align:middle;">varchar</td></tr></tbody></table>
+
+
+
+
+
+
+
+
+
 #### 选项
 
-通过选项实现对字段的约束，选项如下：
+通过选项实现对字段的约束，选项如下（官方文档：[Field Option](https://docs.djangoproject.com/en/2.2/ref/models/fields/#field-options)）：
 
 - null：如果为True，表示允许为空，默认值是False。
 - blank：如果为True，则该字段允许为空白，默认值是False。
 
 **对比：null是数据库范畴的概念，blank是表单验证范畴的**。
 
-- db_column：字段的名称，如果未指定，则使用属性的名称。
-- db_index：若值为True, 则在表中会为此字段创建索引，默认值是False。
-- default：默认值。
 - primary_key：若为True，则该字段会成为模型的主键字段，默认值是False，一般作为AutoField的选项使用。
 - unique：如果为True, 这个字段在表中必须有唯一值，默认值是False。
+- choices：值枚举，限制值的取值范围
+- db_column: 该字段在数据库中的字段名，如果未指定，则使用属性的名称。
+- db_index: 该字段是否使用索引。如果为True则创建数据库索引，默认值为False。
+- db_tablespace: 数据索引所使用的表空间，如果没有设置则使用setting中的`DEFAULT_INDEX_TABLESPACE`。如果后端数据库不支持，则忽略该选项。(oracel 支持索引表空进)
+- default : 默认值。可以是一个值或者是个可调用的对象，如果是个可调用对象，每次实例化模型时都会调用该对象。
+- editable：如果为False，则该字段不会显示在管理员或其他任何[`ModelForm`](https://docs.djangoproject.com/en/2.2/topics/forms/modelforms/#django.forms.ModelForm)中.在[模型验证](https://docs.djangoproject.com/zh-hans/2.2/ref/models/instances/#validating-objects)期间也将跳过它们。默认值为`True`。
+- error_messages: 该`error_messages`参数使您可以覆盖该字段将引发的默认消息。传递一个包含与您要覆盖的错误消息相匹配的键的字典。错误消息键包括`null`，`blank`，`invalid`，`invalid_choice`， `unique`，和`unique_for_date`。在下面的“ [字段类型”](https://docs.djangoproject.com/zh-hans/2.2/ref/models/fields/#field-types)部分中为每个字段指定了其他错误消息键。这些错误消息通常不会传播到表单。请参见 [有关模型的error_messages的注意事项](https://docs.djangoproject.com/zh-hans/2.2/topics/forms/modelforms/#considerations-regarding-model-errormessages)。
+- help_text：额外的“帮助”文档，随表单控件一起显示。他对于生成文档时非常有用的，即使你没有在表单使用该字段。注意：他不会转义HTML所以，如果你可以在在里面使用html。
+- primary_key: 如果设置为True，则初始设置为该模型的之间。如果您未在模型的任何字段中指定`primary_key`，则Django会指定一个`AutoField`字段来保留主键，因此，如果你不需要自定义主键，你可以不用设置它。`primary_key=True`继承了`null=False`和`unique=True`。
+- `unique`：如果值为True，则表示该字段值在表中必须唯一。如果你保存一个具有`unique`字段且值重复的模型，`save()`方法将引发 [`django.db.IntegrityError`](https://docs.djangoproject.com/en/2.2/ref/exceptions/#django.db.IntegrityError) 错误。
+- unique_for_date
+- unique_for_month
+- unique_for_year: 其值指向[`DateField`](https://docs.djangoproject.com/zh-hans/2.2/ref/models/fields/#django.db.models.DateField)或[`DateTimeField`](https://docs.djangoproject.com/zh-hans/2.2/ref/models/fields/#django.db.models.DateTimeField)字段的字段名，表示该字段对应其值的日期、月份或年份的值是唯一的。对于`DateTimeFeidl`它只比较日期，不会比较时间。例如：你有一个字段名且设置了`unique_for_date='pub_date'`,Django 将不允许设置相同的`title`和`pub_date`。
+- verbose_name: 后台管理时显示该字段的显示名称，默认为字段的属性名，并将下划线转换为空格。
+- validators: 要为此字段运行的验证器列表。有关更多信息，请参见[验证程序文档](https://docs.djangoproject.com/zh-hans/2.2/ref/validators/)。
 
 > 对比：null是数据库范畴的概念，blank是后台管理页面表单验证范畴的。
 > 经验:
 > 当修改模型类之后，如果添加的选项不影响表的结构，则不需要重新做迁移，商品的选项中default和blank不影响表结构。
+
+
+
+
 
 
 
@@ -1237,6 +1491,32 @@ class HeroInfo(models.Model):
     hbook = models.ForeignKey('BookInfo')#英雄与图书表的关系为一对多，所以属性定义在英雄模型类中
 ```
 
+> ForeignKey其第一个参数to可以为模型类、模型名、字符串，其中可以用`self`表示自关联
+>
+> ```python
+> class BookInfo(models.Model):
+>     pass
+> class HeroInfo(models.Model):
+>     hbook = models.ForeignKey('BookInfo', on_delete=models.CASCADE, related_name='hero_book')#英雄与图书表的关系为一对多，所以属性定义在英雄模型类中
+> ```
+>
+> 参数`related_name`和`related_query_name`用于关联查询是的别名，例如以上实例中，查询图书所对用的英雄可以用除了`book.heroinfo_set.all()`的另外一种方式`book.hero_book.all()`。
+
+###### SQL 外键约束`on_delete`参数
+
+在最新的django框架中，models设置外键约束时，on_delete是必填项，所以创建外键时如何设置on_delete的属性就很重要。
+
+- `CASCADE`:这就是默认的选项，级联删除。
+- `PROTECT`: 保护模式，如果采用该选项，删除的时候，会抛出ProtectedError错误。
+
+- `SET_NULL`: 置空模式，删除的时候，外键字段被设置为空，前提就是blank=True, null=True,定义该字段的时候，允许为空。
+- `SET_DEFAULT`: 置默认值，删除的时候，外键字段设置为默认值，所以定义外键的时候注意加上一个默认值。
+- `SET()`: 自定义一个值，该值当然只能是对应的实体了.
+
+> 注意：如果多个字段关联同一字段关联同一外键，则需要定义不同的`related_name`或`related_query_name`。
+
+
+
 ##### 多对多关系
 
 我们下面设计一个新闻类和新闻类型类，一个新闻类型下可以用很多条新闻，一条新闻也可能归属于多种新闻类型。
@@ -1439,6 +1719,10 @@ python manage.py runserver
 - str()：在将对象转换成字符串时会被调用。
 - save()：将模型对象保存到数据表中，ORM框架会转换成对应的insert或update语句。
 - delete()：将模型对象从数据表中删除，ORM框架会转换成对应的delete语句。
+
+### refresh_from_db(using=None, fields=None)
+
+从数据库中重载Model，你可以使用using指定从那个数据库重载数据，你可以使用fields来强制重载某些字段值，默认只重新加载非延迟加载的字段的值。
 
 ## 模型类的属性
 

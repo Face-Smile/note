@@ -373,6 +373,25 @@ The statement permits these role specifiers:
 
 ### 数据库
 
+#### 创建数据库
+
+参看[MySQL DOC](https://dev.mysql.com/doc/refman/8.0/en/create-database.html)
+
+```
+CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name
+    [create_option] ...
+
+create_option: {
+    [DEFAULT] CHARACTER SET [=] charset_name
+  | [DEFAULT] COLLATE [=] collation_name
+  | [DEFAULT] ENCRYPTION [=] {'Y' | 'N'}
+}
+```
+
+> 注意：MySQL的utf8编码不是真正的utf8编码（原因是MySQL在utf8编码标准发布之前就支持`utf8`，而当时的utf8与标准不一样），所以如果要使用真正的utf8可以使用utf8mb4
+
+> create schema 是 create database的别名。
+
 ![image-20191123150905448](MySQL_note/image-20191123150905448.png)
 
 #### 删除数据库
@@ -577,6 +596,14 @@ The statement permits these role specifiers:
 
 `select database()` 显示当前的数据库是哪个
 
+`select user();` 查看当前登入的用户
+
+`select @@tx_isolation;`查看当前事务的隔离级别
+
+`show variables like 'autocommit';` 查看是否开启自动提交
+
+
+
 ### MySQL 储存引擎
 
 #### 什么是存储引擎？
@@ -707,7 +734,7 @@ Archive是归档的意思，在归档之后很多的高级功能就不再支持�
 
 ## 事务
 
-事务的四大特性(简称ACID)
+### 事务的四大特性(简称ACID)
 
 - 原子性(Atomicity)
 - 一致性(Consistency)
@@ -717,6 +744,47 @@ Archive是归档的意思，在归档之后很多的高级功能就不再支持�
 ![image-20191125214310571](MySQL_note/image-20191125214310571.png)
 
 ![image-20191125220442018](MySQL_note/image-20191125220442018.png)
+
+### 事务的隔离级别
+
+
+
+| 事务隔离级别                 | 脏读 | 不可重复读 | 幻读 |
+| ---------------------------- | ---- | ---------- | ---- |
+| 读未提交（read-uncommitted） | 是   | 是         | 是   |
+| 读已提交（read-committed）   | 否   | 是         | 是   |
+| 可重复读（repeatable-read）  | 否   | 否         | 是   |
+| 串行化（serializable）       | 否   | 否         | 否   |
+
+1、 脏读：A，B两事务，A事务会读取到B事务未提交的数据，然后B因为某些原因回滚数据，所以A就读取了B没有提交的数据，也称脏数据。
+
+2、 不可重复读：在A事务中对同一数据两次查询不一致，可能原因是在A事务提交之前B事务对该数据进行了操作
+
+3、 幻读：类似于不可重复读，都是在一个事务周期内读的数据不一致，区别在于幻读是侧重于插入操作带来的影响，而不可重复读是编辑或者删除带来的影响
+
+
+
+#### `Read Uncommited`(读取未提交内容)
+
+在该隔离级别，所有事务都可以看到其他未提交事务的执行结果。本隔离级别很少用于实际应用，因为它的性能也不比其他级别好多少。读取未提交的数据，也被称之为脏读（Dirty Read）。
+
+#### `Read Committed`(读取提交内容)
+
+这是大多数数据库系统的默认隔离级别（但不是MySQL默认的）。它满足了隔离的简单定义：一个事务只能看见已经提交事务所做的改变。这种隔离级别 也支持所谓的不可重复读（Nonrepeatable Read），因为同一事务的其他实例在该实例处理期间可能会有新的commit，所以同一select可能返回不同结果。
+
+#### Repeatable Read（可重读）
+
+这是MySQL的默认事务隔离级别，它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行。不过理论上，这会导致另一个棘手的问题：幻读 （Phantom Read）。简单的说，幻读指当用户读取某一范围的数据行时，另一个事务又在该范围内插入了新行，当用户再读取该范围的数据行时，会发现有新的“幻影” 行。InnoDB和Falcon存储引擎通过多版本并发控制（MVCC，Multiversion Concurrency Control）机制解决了该问题。
+
+#### Serializable（可串行化）
+
+这是最高的隔离级别，它通过强制事务排序，使之不可能相互冲突，从而解决幻读问题。简言之，它是在每个读的数据行上加上共享锁。在这个级别，可能导致大量的超时现象和锁竞争。
+
+
+
+
+
+
 
 
 
@@ -1018,6 +1086,36 @@ error log记录错误日志
 ```
 log-error="D:/mysql/logs/error.log"
 ```
+
+
+
+
+
+## MySQL数据备份和恢复
+
+下面将通过一些案例介绍如何使用MySQL提供的工具命令进行逻辑备份。使用 mysqldump 备份数据库，默认该工具会将SQL语句信息导出至标准输出，可以通过重定向将输出保存至文件：
+
+（1）备份所有的数据库
+
+` mysqldump -u root -p --all-databases > bak.sql`
+
+（2）备份指定的数据库db1、db2以及db3
+
+`mysqldump -u root -p --databases db1 db2 db3 > bak.sql`
+
+（3）备份db数据库，当仅备份一个数据库时，--databases可以省略
+
+`mysqldump -u root -p db4 > bak.sql`
+
+`mysqldump -u root -p --databases db4 > bak.sql`
+
+两者之间的差别在于不使用 --databases 选项，则备份输出信息中不会包含CREATE DATABASE或USE语句。不使用 --databases 选项备份的数据文件，在后期进行数据还原操作时，如果该数据库不存在，必须先创建该数据库。
+
+使用mysql命令读取备份文件，实现数据还原功能：
+
+`mysql -u root -p < bak.sql`
+
+`mysql -u root -p db4 < bak.sq1`
 
 
 
