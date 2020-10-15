@@ -4762,6 +4762,41 @@ getWaitQueueLength(Condition condition)  // 获取正在等待此锁相关条件
 
 
 
+# Java 集合
+
+## Collection
+
+### retainAll（取交集）
+
+```java
+import java.util.ArrayList;
+ 
+public class RetainAllDemo {
+    public static boolean compare(int[] arr1,int[] arr2){
+        ArrayList<Integer> list1=new ArrayList<>();
+        ArrayList<Integer> list2=new ArrayList<>();
+        for(int a:arr1){
+            list1.add(a);
+        }
+        for(int b:arr2){
+            list2.add(b);
+        }
+    //  System.out.println(list1.retainAll(list2));
+        return list1.retainAll(list2);//list1中6，5不在list2中执行该方法时进行了移除操作返回true，如果将arr1改为{1,2,3,4}，执行该方法无需进行移除操作返回false；
+    }
+    public static void main(String[] args) {
+        int[] arr1={1,2,3,4,6,5};
+        int[] arr2={1,2,3,4,53};
+        boolean b=compare(arr1,arr2);
+        System.out.println(".....:"+b);
+    }
+}
+```
+
+
+
+
+
 # Java 常见问题
 
 ## Java 中 == 和 equals 方法

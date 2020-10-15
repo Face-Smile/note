@@ -68,7 +68,7 @@
 设置代理
 
 ```shell
-git config —global http.proxy [代理网址]
+git config —-global http.proxy [代理网址]
 ```
 
 取消代理设置
@@ -692,7 +692,9 @@ $ git reset --keep start                    (3)
 
 ## `git restore`
 
-取消尚未提交至暂存区的更改
+取消工作区尚未提交至暂存区的更改
+
+恢复工作区指定文件至缓存区的对应文件的状态
 
 ```
 ➜  git_test git:(master) ✗ git status
@@ -722,7 +724,9 @@ this is the forth line
 
 **`git restore --staged`**
 
-取消尚未提交至版本库的修改
+取消暂存区尚未提交到版本库的更改
+
+取消暂存区的修改，恢复到版本库状态
 
 ```
 ➜  git_test git:(master) cat code.txt 
