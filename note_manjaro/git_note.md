@@ -497,6 +497,12 @@ $ git diff SHA1 SHA2
 
 `git reset`命令用于将当前`HEAD`复位到指定状态。一般用于撤消之前的一些操作(如：`git add`,`git commit`等)。
 
+- git reset --soft HEAD~1 撤回最近一次的commit(撤销commit，不撤销git add)
+
+- git reset --mixed HEAD~1 撤回最近一次的commit(撤销commit，撤销git add)
+
+- git reset --hard HEAD~1 撤回最近一次的commit(撤销commit，撤销git add,还原改动的代码)
+
 **简介**
 
 ```shell
@@ -1032,7 +1038,19 @@ git告诉我们，code.txt文件存在冲突，必须手动解决冲突后再提
 
 ## `git stash`
 
-把当前工作现场保存起来（适用于当前工作区，不足以提交到版本库，当又不能丢弃）
+把当前工作现场保存起来（适用于当前工作区，不足以提交到版本库，当又不能丢弃），`git stash`不带任何参数的调用等效于`git stash push`
+
+
+
+### `git stash push -m <message>`
+
+
+
+### `git stash save <message>`
+
+把当前工作现场保存起来,并添加消息记录
+
+
 
 ### `git stash list`
 
@@ -1040,9 +1058,43 @@ git告诉我们，code.txt文件存在冲突，必须手动解决冲突后再提
 
 ![image-20191226181158645](git_note/image-20191226181158645.png)
 
+
+
+### `git stash show `
+
+显示做了哪些改动，默认show第一个存储,如果要显示其他存贮，后面加stash@{$num}，比如第二个 git stash show stash@{1}
+
+
+
+### `git stash show -p`
+
+显示第一个存储的改动，如果想显示其他存存储，命令：git stash show stash@{$num} -p ，比如第二个：git stash show stash@{1} -p
+
+
+
+### `git stash apply`
+
+应用某个存储,但不会把存储从存储列表中删除，默认使用第一个存储,即stash@{0}，如果要使用其他个，git stash apply stash@{$num} ， 比如第二个：git stash apply stash@{1} 
+
+
+
 ### `git stash pop`
 
-恢复以保存的工作现场
+恢复以保存的工作现场，并将缓存堆栈中的对应stash删除
+
+
+
+### `git stash drop stash@{$num}`
+
+丢弃stash@{$num}储存，从列表中删除这个储存
+
+
+
+### `git stash clear`
+
+删除所有缓存的stash储存
+
+
 
 
 
