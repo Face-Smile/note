@@ -348,6 +348,51 @@ ldd(选项)(参数)
 
 
 
+### `tr`
+
+字符串替换
+
+```
+tr [选项]… 集合1 [集合2]
+选项说明：
+ 
+-c, -C, –complement 用集合1中的字符串替换，要求字符集为ASCII。
+ 
+-d, –delete 删除集合1中的字符而不是转换
+ 
+-s, –squeeze-repeats 删除所有重复出现字符序列，只保留第一个；即将重复出现字符串压缩为一个字符串。
+ 
+-t, –truncate-set1 先删除第一字符集较第二字符集多出的字符
+
+字符集合的范围：
+ 
+\NNN 八进制值的字符 NNN (1 to 3 为八进制值的字符)
+\\ 反斜杠
+\a Ctrl-G 铃声
+\b Ctrl-H 退格符
+\f Ctrl-L 走行换页
+\n Ctrl-J 新行
+\r Ctrl-M 回车
+\t Ctrl-I tab键
+\v Ctrl-X 水平制表符
+CHAR1-CHAR2 从CHAR1 到 CHAR2的所有字符按照ASCII字符的顺序
+[CHAR*] in SET2, copies of CHAR until length of SET1
+[CHAR*REPEAT] REPEAT copies of CHAR, REPEAT octal if starting with 0
+[:alnum:] 所有的字母和数字
+[:alpha:] 所有字母
+[:blank:] 水平制表符，空白等
+[:cntrl:] 所有控制字符
+[:digit:] 所有的数字
+[:graph:] 所有可打印字符，不包括空格
+[:lower:] 所有的小写字符
+[:print:] 所有可打印字符，包括空格
+[:punct:] 所有的标点字符
+[:space:] 所有的横向或纵向的空白
+[:upper:] 所有大写字母
+```
+
+
+
 ### curl
 
 `curl <url>`
