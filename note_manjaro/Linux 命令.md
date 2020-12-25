@@ -189,6 +189,16 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
+#### `usermod`
+
+已存在用户的用户名
+
+```shell
+usermod -l <newName> [-m -d <newHomeDir>] oldName
+```
+
+> 登出要修改用户名的账户（注意没有运行以该用户为所有者的进程，否者无法修改）
+
 
 
 #### `passwd`

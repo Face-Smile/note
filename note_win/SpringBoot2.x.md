@@ -1572,3 +1572,26 @@ public class CustomExceptionHandler {
 }
 ```
 
+
+
+
+
+# Maven Pugin
+
+## 打包时包含依赖
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+                <classifier>exec</classifier>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+打包后会生成两个jar文件，其中一个含有`exec`为包含依赖的可执行文件，可以直接`java -jar 包名` 运行
