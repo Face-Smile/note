@@ -465,7 +465,7 @@ nslookup www.baidu.com 114.114.114.114
 
 
 
-### ssh
+### `ssh`
 
 ssh 登入服务器
 
@@ -535,7 +535,7 @@ $ ssh -R 6000:localhost:5000 remote.example.com
 
 
 
-### ssh-keygen
+### `ssh-keygen`
 
 #### 创建一个 SSH key 
 
@@ -560,7 +560,7 @@ Generating public/private rsa key pair.
 
 
 
-### ssh-copy-id
+### `ssh-copy-id`
 
 ssh-copy-id命令可以把本地主机的公钥复制到远程主机的authorized_keys文件上
 
@@ -585,6 +585,58 @@ ssh-copy-id - 将你的公共密钥填充到一个远程机器上的authorized_k
 ​			另外，命令 “ssh-add -L” 提供任何输出，它使用这个输出优先于身份认证文件。如果给出了参数“-i”选项，或者ssh-add不产生输出，然后它使用身份认证文件的内容。一旦它有一个或者多个指纹， 它使用ssh将这些指纹填充到远程机~/.ssh/authorized_keys文件中。
 
 
+
+### `firewall-cmd`
+
+#### 控制端口开放
+
+```shell
+firewall-cmd --add-service=mysql # 开放mysql端口
+firewall-cmd --remove-service=http # 阻止http端口
+firewall-cmd --list-services  # 查看开放的服务
+firewall-cmd --add-port=3306/tcp # 开放通过tcp访问3306
+firewall-cmd --remove-port=80/tcp # 阻止通过tcp访问3306
+firewall-cmd --add-port=233/udp  # 开放通过udp访问233
+firewall-cmd --list-ports  # 查看开放的端口
+```
+
+
+
+#### 伪装IP
+
+```shell
+firewall-cmd --query-masquerade # 检查是否允许伪装IP
+firewall-cmd --add-masquerade # 允许防火墙伪装IP
+firewall-cmd --remove-masquerade# 禁止防火墙伪装IP
+```
+
+
+
+#### 开启端口转发
+
+1.开启伪装IP
+
+```shell
+firewall-cmd --permanent --add-masquerade
+```
+
+2.配置端口转发
+
+```shell
+# 将到达本机的12345端口的访问转发到另一台服务器的22端口
+firewall-cmd --permanent --add-forward-port=port=12345:proto=tcp:toaddr=192.168.172.131:toport=22
+
+# 将80端口的流量转发至8080
+firewall-cmd --add-forward-port=port=80:proto=tcp:toport=8080
+# 将80端口的流量转发至192.168.0.1的8080端口
+firewall-cmd --add-forward-port=port=80:proto=tcp:toaddr=192.168.0.1:toport=8080
+```
+
+3.重新载入使其生效
+
+```shell
+firewall-cmd --reload
+```
 
 
 
