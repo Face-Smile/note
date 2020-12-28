@@ -25,6 +25,8 @@ Java数据类型分为基本数据类型和引用数据类型
 |  7   |   `char`（字符）   |   16    |                  0~255                   | '\u0000' |
 |  8   | `boolean`（布尔）  |    -    |               true或false                |  false   |
 
+
+
 ## 引用数据类型
 
 引用数据类型非常多，大致包括：
@@ -32,6 +34,8 @@ Java数据类型分为基本数据类型和引用数据类型
 类、接口类型、数组类型、枚举类型、注解类型、字符串类型
 
 简单来说，所有非基本数据了类型就是引用类型。
+
+
 
 
 
@@ -4858,3 +4862,22 @@ public static Integer valueOf(int i) {
 对于String类型，其hashCode方法被复写，其是根据值的类型来返回hashCode值的。
 
 如果想使用默认的hashCode 方法获取内存地址，可以使用`System.identityHashCode(obj)`方法
+
+
+
+## 强制类型转换优先级问题
+
+强制类型转换的优先级是 大于算术运算符的
+
+```java
+public class Test {
+    int a = (int) Math.random() * (10 - 5);
+    System.out.println(a);
+}
+```
+
+```
+// 结果
+0
+```
+
