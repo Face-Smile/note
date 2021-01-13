@@ -4799,6 +4799,48 @@ public class RetainAllDemo {
 
 
 
+# Java异常
+
+## Java 异常类型
+
+Java从`Throwable`直接派生出`Exception`和`Error`。其中`Exception`是可以抛出的基本类型,在Java类库、方法以及运行时故障都可以抛出`Exception`型异常。`Exception`表示可以恢复的异常，时编译器捕捉到的；`Error`表示编译时和系统错误，表示系统在运行期间出现了严重的错误，属于不可恢复的错误，由于这数据JVM层次的严重错误，因此这种错误会导致程序终止执行。Exception又分为检查异常和运行时异常。异常类的结构层次图如下：
+
+```mermaid
+classDiagram
+Throwable <|-- Error : extends
+Throwable <|-- Exception : extends
+Exception <|-- RunTimeException : extends
+Exception <|-- Non RunTimeException : extends
+```
+
+### `Exception` 
+
+JDK8列出的直接子类
+
+```
+AclNotFoundException, ActivationException, AlreadyBoundException, ApplicationException, AWTException, BackingStoreException, BadAttributeValueExpException, BadBinaryOpValueExpException, BadLocationException, BadStringOperationException, BrokenBarrierException, CertificateException, CloneNotSupportedException, DataFormatException, DatatypeConfigurationException, DestroyFailedException, ExecutionException, ExpandVetoException, FontFormatException, GeneralSecurityException, GSSException, IllegalClassFormatException, InterruptedException, IntrospectionException, InvalidApplicationException, InvalidMidiDataException, InvalidPreferencesFormatException, InvalidTargetObjectTypeException, IOException, JAXBException, JMException, KeySelectorException, LambdaConversionException, LastOwnerException, LineUnavailableException, MarshalException, MidiUnavailableException, MimeTypeParseException, MimeTypeParseException, NamingException, NoninvertibleTransformException, NotBoundException, NotOwnerException, ParseException, ParserConfigurationException, PrinterException, PrintException, PrivilegedActionException, PropertyVetoException, ReflectiveOperationException, RefreshFailedException, RemarshalException, RuntimeException, SAXException, ScriptException, ServerNotActiveException, SOAPException, SQLException, TimeoutException, TooManyListenersException, TransformerException, TransformException, UnmodifiableClassException, UnsupportedAudioFileException, UnsupportedCallbackException, UnsupportedFlavorException, UnsupportedLookAndFeelException, URIReferenceException, URISyntaxException, UserException, XAException, XMLParseException, XMLSignatureException, XMLStreamException, XPathException
+```
+
+#### `RunTimeException` (运行时异常)
+
+NullPointException(空指针异常), ClassCastException(类型转换异常),IndexOutOfBoundsException(越界异常),IllegalArgumentException(非法参数异常), ArrayStoreException(数组储存异常), ArithmeticException(算术异常), BuffereOverflowException(缓冲区溢出异常)等.
+
+JDK8列出的直接子类
+
+```
+AnnotationTypeMismatchException, ArithmeticException, ArrayStoreException, BufferOverflowException, BufferUnderflowException, CannotRedoException, CannotUndoException, ClassCastException, CMMException, CompletionException, ConcurrentModificationException, DataBindingException, DateTimeException, DOMException, EmptyStackException, EnumConstantNotPresentException, EventException, FileSystemAlreadyExistsException, FileSystemNotFoundException, IllegalArgumentException, IllegalMonitorStateException, IllegalPathStateException, IllegalStateException, IllformedLocaleException, ImagingOpException, IncompleteAnnotationException, IndexOutOfBoundsException, JMRuntimeException, LSException, MalformedParameterizedTypeException, MalformedParametersException, MirroredTypesException, MissingResourceException, NegativeArraySizeException, NoSuchElementException, NoSuchMechanismException, NullPointerException, ProfileDataException, ProviderException, ProviderNotFoundException, RasterFormatException, RejectedExecutionException, SecurityException, SystemException, TypeConstraintException, TypeNotPresentException, UncheckedIOException, UndeclaredThrowableException, UnknownEntityException, UnmodifiableSetException, UnsupportedOperationException, WebServiceException, WrongMethodTypeException
+```
+
+
+
+
+
+按照编译器检查方式划分，异常又可以分为检查型异常（CheckedException）和非检查型异常 （UncheckedException）。Error和RuntimeException合起来称为UncheckedException，之所以这么 称呼，是因为编译器不检查方法是否处理或者抛出这两种类型的异常，因此编译期间出现这种类型的异常也不会报错，默认由虚拟机提供处理方式。除了Error 和RuntimeException这两种类型的异常外，其它的异常都称为Checked异常。
+
+
+
+
+
 
 
 # Java 常见问题
