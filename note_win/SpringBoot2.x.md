@@ -141,6 +141,12 @@ Spring自动注入
 
 
 
+# Spring Boot 配置文件参数
+
+参考[Spring Boot 文档](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html)
+
+
+
 # SpringBoot 快速入门
 
 ## 1. SpringBoot 和 SpringCloud的关系

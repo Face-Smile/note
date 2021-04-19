@@ -936,6 +936,14 @@ $ git add mydir
 
 创建分支
 
+`git branch -vv`: 查看本地分支和远程分支的跟踪关系
+
+`git branch -r`: 查看远程分支名
+
+`git branch --set-upstream branch-name origin/branch-name`: 将`branch-name`分支追踪远程分支`origin/branch-name`
+
+`git branch -u origin/serverfix`: 设置当前分支跟踪远程分支origin/serverfix
+
 
 
 ## `git checkout`
@@ -958,7 +966,15 @@ $ git add mydir
 
 
 
+### `git checkout -b <name> <origin_branch_name>`
 
+基于`origin_branch_name`创建分支`name`,并设置`name`分支跟踪`origin_branch_name`分支
+
+
+
+### `git checkout  --track <origin_branch_name>`
+
+基于`origin_branch_name`创建同名分支,并设置该分支跟踪`origin_branch_name`分支
 
 
 
@@ -1086,7 +1102,7 @@ git告诉我们，code.txt文件存在冲突，必须手动解决冲突后再提
 
 ### `git stash drop stash@{$num}`
 
-丢弃stash@{$num}储存，从列表中删除这个储存
+丢弃stash@{$num}储存，从列表中删除这个储存, `$num`用对应的数字替代
 
 
 
@@ -1103,6 +1119,107 @@ git告诉我们，code.txt文件存在冲突，必须手动解决冲突后再提
 
 
 
+
+
+
+## `git push`
+
+将本地代码推送到远程分支
+
+```
+git push <远程主机名> <本地分支名>[:<远程分支名>]
+```
+
+`git push origin master`
+
+如果省略远程分支名,则表示将本地分支推送到与之存在追踪关系的远程分支(通常两者同名),如果对用分支不存在,则创建对应的远程分支.
+
+
+
+`git push origin :refs/for/master`
+
+如果省略本地分支名,则表示删除指定的远程分支,因为这等同于推送一个空的本地分支到远程分支,等同于`git push origin --delete master`
+
+
+
+`git push origin`
+
+如果当前分支与远程分支存在追踪关系,则本地分支和远程分支都可以省略,将当前分支推送到origin主机的对应分支.
+
+
+
+`git push`
+
+如果当前分支只存在一个对应的远程分支,那么主机名都可以省略, 可以使用`git branch -r`查看远程分支名.
+
+不带任何参数的git push，默认只推送当前分支，这叫做simple方式，还有一种matching方式，会推送所有有对应的远程分支的本地分支， Git 2.0之前默认使用matching，现在改为simple方式
+
+　如果想更改设置，可以使用`git config`命令。`git config --global push.default matching OR git config --global push.default simple`,可以使用`git config -l` 查看配置
+
+
+
+`git push -u origin master`
+
+如果当前分支与多个主机存在追踪关系，则可以使用` -u` 参数指定一个默认主机，这样后面就可以不加任何参数使用`git push`
+
+
+
+`git push --all origin`
+
+将本地的所有分支都推送到远程主机，不管是否存在对应的远程分支.
+
+
+
+`git push --force origin`
+
+`git push`的时候需要本地先`git pul`l更新到跟服务器版本一致，如果本地版本库比远程服务器上的低，那么一般会提示你`git pull`更新，如果要强制提交，那么可以使用这个命令
+
+
+
+### git中refs/for ＆ refs/heads
+
+`refs/for/[brach]` 需要经过code review之后才可以提交，而`refs/heads/[beanch]`不需要code review。
+
+
+
+## 相对引用
+
+你可以通过`~`字符来引用相对于另一个commit的commit。例如：下面的代码引用了HEAD的祖父级：
+
+```shell
+git show HEAD~2
+```
+
+但是，当用于合并提交时，事情变的有点复杂。因为合并提交存在一个以上的父级，意味着至少有两条路径可以选择。对于3路合并（两条分支合并为一体），第一父级在你执行合并命令时所在的分支，第二父级在你传入`git merge`命令的那个分支上。
+
+`~`字符将在第一父级上追踪，如果你想要在别的父级上追踪，你需要使用`^`字符来指定对那一个父级进行追踪。例如，如果你合并提交，下面的命令会追踪第二父级：
+
+```
+git show HEAD^2
+```
+
+可以使用多个`^`来移动多代。例如，下面代码展示了追踪第二父级的HEAD的祖父级（假设其为一个合并）
+
+```
+git show HEAD^2^1
+```
+
+为了说明`~`和`^`是如何工作的，下图展示了基于A通过相对引用如何追踪的每个具体的引用。在一些情况下可以通过多种方式来得到同一个提交：
+
+![图片描述](git_note/bVHIk4)
+
+使用普通引用的命令也能使用相对引用。例如，以下的命令：
+
+```
+# 列出合并提交第二父级上的提交（commits）
+git log HEAD^2
+
+# 从当前分支上移除最近三次提交
+git reset HEAD~3
+
+# 在当前分支上动态rebase最近三次提交
+git rebase -i HEAD~3
+```
 
 
 
