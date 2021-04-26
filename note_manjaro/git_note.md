@@ -1180,6 +1180,12 @@ git push <远程主机名> <本地分支名>[:<远程分支名>]
 
 
 
+`git push --delete <remote_host_name> <branchName>`
+
+删除远程分支(例子:`git push --delete origin dev`)
+
+
+
 ### git中refs/for ＆ refs/heads
 
 `refs/for/[brach]` 需要经过code review之后才可以提交，而`refs/heads/[beanch]`不需要code review。
