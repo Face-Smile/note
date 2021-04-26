@@ -944,6 +944,10 @@ $ git add mydir
 
 `git branch -u origin/serverfix`: 设置当前分支跟踪远程分支origin/serverfix
 
+`git branch -m oldName newName`: 本地分支重命名
+
+
+
 
 
 ## `git checkout`
