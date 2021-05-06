@@ -1186,9 +1186,40 @@ git push <远程主机名> <本地分支名>[:<远程分支名>]
 
 
 
-### git中refs/for ＆ refs/heads
+
+
+## `git filter-branch`
+
+### 用途一: 修改commit的用户和邮箱
+
+```shell
+git filter-branch --env-filter '
+        if test "$GIT_AUTHOR_EMAIL" = "root@localhost"
+        then
+                GIT_AUTHOR_EMAIL=john@example.com
+        fi
+        if test "$GIT_COMMITTER_EMAIL" = "root@localhost"
+        then
+                GIT_COMMITTER_EMAIL=john@example.com
+        fi
+' -- --all
+```
+
+
+
+
+
+## git中refs/for ＆ refs/heads
 
 `refs/for/[brach]` 需要经过code review之后才可以提交，而`refs/heads/[beanch]`不需要code review。
+
+
+
+
+
+
+
+
 
 
 
