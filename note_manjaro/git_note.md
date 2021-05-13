@@ -946,6 +946,8 @@ $ git add mydir
 
 `git branch -m oldName newName`: 本地分支重命名
 
+`git branch --show-current`: 获取当前分支名( Git 2.22 and above), 相当于`git rev-parse --abbrev-ref HEAD`
+
 
 
 
