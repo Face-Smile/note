@@ -1222,7 +1222,19 @@ git filter-branch --env-filter '
 
 
 
-
+> 运行一次之后会提示已经存在备份无法创建新的备份,需要使用`-f`强制覆盖备份(注意`-f`参数位置)
+>
+> ```
+> git filter-branch -f --env-filter '
+>         if test "$GIT_AUTHOR_NAME" = "username"
+>         then
+>                 GIT_AUTHOR_NAME=Face-Smile
+>         fi
+>         if test "$GIT_COMMITTER_NAME" = "username"
+>         then
+>                 GIT_COMMITTER_NAME=Face-Smile
+>         fi
+> ' -- --all
 
 
 
