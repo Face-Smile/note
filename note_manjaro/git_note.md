@@ -1207,6 +1207,25 @@ git filter-branch --env-filter '
 
 
 
+```shell
+git filter-branch --env-filter '
+        if test "$GIT_AUTHOR_NAME" = "username"
+        then
+                GIT_AUTHOR_NAME=Face-Smile
+        fi
+        if test "$GIT_COMMITTER_NAME" = "username"
+        then
+                GIT_COMMITTER_NAME=Face-Smile
+        fi
+' -- --all
+```
+
+
+
+
+
+
+
 
 
 ## git中refs/for ＆ refs/heads
