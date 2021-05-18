@@ -1,4 +1,4 @@
-# 编写服务端
+# 编写TCP服务端
 
 此章节解释如何使用Twisted在TCP服务上实现网络协议解析和处理（同样可以在SSL和Unix socket servers上复用此代码），对于UDP有单独的文档 -- [UDP](https://twistedmatrix.com/documents/current/core/howto/udp.html) 
 
@@ -302,7 +302,7 @@ reactor.run()
 
 
 
-# 编写客户端
+# 编写TCP客户端
 
 ## 概述
 
@@ -488,6 +488,22 @@ class EchoClientFactory(ReconnectingClientFactory):
 `transport`属性是给基于`ITCPTransport`接口的实现。API文档： [ITCPTransport](https://twistedmatrix.com/documents/20.3.0/api/twisted.internet.interfaces.ITCPTransport.html) .
 
 接口类指定具体对象拥有的方法和行为。参考 [Components: Interfaces and Adapters](https://twistedmatrix.com/documents/current/core/howto/components.html) 了解twisted中接口的信息。
+
+
+
+# UDP网络
+
+## 概述
+
+与TCP不同，UDP没有连接概念。UDP套接字可以从网络上的任何服务器接收数据报，并将数据报发送到网络上的任何主机。另外，数据报可以以任何顺序到达，也可能根本不会到达，或者在传输中被复制而收到相同的。
+
+由于没有连接，因此对于每个UDP套接字，我们只使用一个对象，一个协议。然后，我们使用[`twisted.internet.interfaces.IReactorUDP`](https://zqdtsvhrzxjtvwos62tp4kzjia-ac4c6men2g7xr2a-twistedmatrix-com.translate.goog/documents/21.2.0/api/twisted.internet.interfaces.IReactorUDP.html)反应堆API ，通过反应堆将该协议连接到UDP传输。
+
+
+
+## 数据报文协议
+
+实际实现协议解析和处理的类通常为[`twisted.internet.protocol.DatagramProtocol`](https://zqdtsvhrzxjtvwos62tp4kzjia-ac4c6men2g7xr2a-twistedmatrix-com.translate.goog/documents/21.2.0/api/twisted.internet.protocol.DatagramProtocol.html)
 
 
 
@@ -1014,11 +1030,107 @@ d2.callback("two")
 
 ### `Chaining Deferreds`(链接延迟)
 
+- 回调链返回`Deferred`
+
+如果回调链返回`Deferred`，当前回调链将会暂停，直到返回的`Deferred`触发执行
+
+```python
+from twisted.internet.defer import Deferred
+
+d1 = Deferred()
+d2 = Deferred()
+
+d1.addCallback(lambda x: print("d1:", x) or d2)
+d1.addCallback(lambda x: print("d1-1:", x))
+d2.addCallback(lambda x: print("d2:", x) or x)
+
+d1.callback('d1 result')
+d2.callback('d2 result')
+```
+
+```
+d1: d1 result
+d2: d2 result
+d1-1: d2 result
+```
+
+
+
 - `chainDeferred(otherDeferred)`
 
 将`otherDeferred`添加到当前`Deferred`处理链的末尾。当调用`self.callback`,当前`Deferred`的处理链的结果会传给`otherDeferred.callback`，不影响当前`Deferred`继续添加回调。
 
 其与`self.addCallbacks(otherDeferred.callback, otherDeferred.errback)`作用相同
+
+```python
+from twisted.internet.defer import Deferred
+
+d3 = Deferred()
+d4 = Deferred()
+
+d3.addCallback(lambda x: print("d3:", x) or x)
+d4.addCallback(lambda x: print("d4:", x))
+
+d3.chainDeferred(d4)
+d3.callback('result')
+```
+
+```
+d3: result
+d4: result
+```
+
+
+
+
+
+## `twisted.internet.task`
+
+#### `deferLater(clock, delay, callable=None, *args, **kw)`
+
+```
+@type clock: L{IReactorTime} provider
+@param clock: The object which will be used to schedule the delayed
+call.
+
+@type delay: C{float} or C{int}
+@param delay: The number of seconds to wait before calling the function.
+
+@param callable: The object to call after the delay.
+
+@param *args: The positional arguments to pass to C{callable}.
+
+@param **kw: The keyword arguments to pass to C{callable}.
+
+@rtype: L{defer.Deferred}
+
+@return: A deferred that fires with the result of the callable when the
+specified time has elapsed.
+```
+
+> 延迟调用方法。需要在`reactor.run()`调用启动`reactor`后才会执行`callback`,`delay`是基于声明时开始计算的而不是基于`reactor.run()`调用时开始的。
+
+
+
+### `LoopingCall类`
+
+
+
+重复调用方法
+
+```python
+from twisted.internet import reactor, task
+
+
+loopCall = task.LoopingCall(lambda: print('hello'))
+loopCall.start(1)
+
+def test():
+    loopCall.interval = 5
+
+reactor.callLater(5, test)
+reactor.run()
+```
 
 
 
@@ -1345,6 +1457,10 @@ reactor.run()
 
 
 
+
+
+
+
 # Twisted Application Framework(twisted应用程序框架)
 
 ## 概述
@@ -1618,3 +1734,10 @@ application = service.Application("DNSExample")
 dnsService.setServiceParent(application)
 ```
 
+
+
+
+
+
+
+# Twisted Reactor
