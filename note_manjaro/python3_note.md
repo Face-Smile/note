@@ -2903,6 +2903,68 @@ loop.close()
 
 
 
+# Python3 线程池
+
+## ThreadPoolExecutor
+
+使用线程池需引入`concurrent.futures.ThreadPoolExecutor`
+
+### 提交任务至线程池
+
+提交任务使用`ThreadPoolExecutor.submit`，会返回一个`cocurrent.futures.Future`对象
+
+### 等待提交任务运行完成
+
+#### 方式一
+
+```python
+ThreadPoolExecutor.shutdown(wait=True)
+```
+
+> 使用该方式后，不再允许提交任务至线程池
+
+#### 方式二
+
+```python
+wait([tasks], return_when=ALL_COMPLETED)
+```
+
+> 该方式不能同时对同一线程池使用，否则会造成死锁，对于这种情况可以使用队列Queue解决
+>
+> ```python
+> from queue import Queue
+> queue = Queue()
+> # 任务执行前
+> queue.put(1)
+> 
+> # 任务执行后
+> queue.get()
+> queue.task_done()
+> 
+> # 等待所有任务执行完成
+> queue.join()
+> ```
+
+
+
+## Future
+
+`concurrent.futures.Future`: 未来可期的任务
+
+### `add_done_callback`
+
+添加任务完成时的回调函数，回调函数的第一个参数是该`Future`对象
+
+如果需要传入其他参数，可以添加属性到`Future`对象上
+
+### `result()`
+
+获取任务结果，可设置等待超时时间
+
+### `exception()`
+
+获取任务执行中抛出的异常，没有则为None，可设置等待超时时间
+
 
 
 
