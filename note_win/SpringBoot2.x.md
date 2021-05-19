@@ -141,6 +141,12 @@ Spring自动注入
 
 
 
+# Spring Boot 配置文件参数
+
+参考[Spring Boot 文档](https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html)
+
+
+
 # SpringBoot 快速入门
 
 ## 1. SpringBoot 和 SpringCloud的关系
@@ -1572,3 +1578,26 @@ public class CustomExceptionHandler {
 }
 ```
 
+
+
+
+
+# Maven Pugin
+
+## 打包时包含依赖
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+                <classifier>exec</classifier>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+打包后会生成两个jar文件，其中一个含有`exec`为包含依赖的可执行文件，可以直接`java -jar 包名` 运行

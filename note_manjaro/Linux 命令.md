@@ -1,3 +1,5 @@
+### 常用命令
+
 `bc`      命令行式计算器（quit离开）
 `ls`     显示文件夹（-a 显示所有  -l 显示详细的信息）
 `cd`      切换文件夹
@@ -189,6 +191,16 @@ smilejack ALL=(ALL:ALL)	ALL
 
 
 
+#### `usermod`
+
+已存在用户的用户名
+
+```shell
+usermod -l <newName> [-m -d <newHomeDir>] oldName
+```
+
+> 登出要修改用户名的账户（注意没有运行以该用户为所有者的进程，否者无法修改）
+
 
 
 #### `passwd`
@@ -348,6 +360,73 @@ ldd(选项)(参数)
 
 
 
+### `tr`
+
+字符串替换
+
+```
+tr [选项]… 集合1 [集合2]
+选项说明：
+ 
+-c, -C, –complement 用集合1中的字符串替换，要求字符集为ASCII。
+ 
+-d, –delete 删除集合1中的字符而不是转换
+ 
+-s, –squeeze-repeats 删除所有重复出现字符序列，只保留第一个；即将重复出现字符串压缩为一个字符串。
+ 
+-t, –truncate-set1 先删除第一字符集较第二字符集多出的字符
+
+字符集合的范围：
+ 
+\NNN 八进制值的字符 NNN (1 to 3 为八进制值的字符)
+\\ 反斜杠
+\a Ctrl-G 铃声
+\b Ctrl-H 退格符
+\f Ctrl-L 走行换页
+\n Ctrl-J 新行
+\r Ctrl-M 回车
+\t Ctrl-I tab键
+\v Ctrl-X 水平制表符
+CHAR1-CHAR2 从CHAR1 到 CHAR2的所有字符按照ASCII字符的顺序
+[CHAR*] in SET2, copies of CHAR until length of SET1
+[CHAR*REPEAT] REPEAT copies of CHAR, REPEAT octal if starting with 0
+[:alnum:] 所有的字母和数字
+[:alpha:] 所有字母
+[:blank:] 水平制表符，空白等
+[:cntrl:] 所有控制字符
+[:digit:] 所有的数字
+[:graph:] 所有可打印字符，不包括空格
+[:lower:] 所有的小写字符
+[:print:] 所有可打印字符，包括空格
+[:punct:] 所有的标点字符
+[:space:] 所有的横向或纵向的空白
+[:upper:] 所有大写字母
+```
+
+
+
+### curl
+
+`curl <url>`
+
+用于多种协议的下载和上传
+
+参数：
+
+`-b <str=value>`:使用cookie，
+
+`-C [number|-]`： 断点续传,从number bytes开始下载，需下载的网址服务器支持断点续传，`-`表示根据保存的文件位置自动设置续传点从而开始下载。
+
+`-r <[start]-[end]>` : 分段下载
+
+额外技巧：
+
+`curl ifconig.me/ip`:获取IP
+
+`curl wttr.in/<city-name>`: 获取天气
+
+
+
 ### dig
 
 查询域名解析
@@ -388,7 +467,7 @@ nslookup www.baidu.com 114.114.114.114
 
 
 
-### ssh
+### `ssh`
 
 ssh 登入服务器
 
@@ -458,7 +537,7 @@ $ ssh -R 6000:localhost:5000 remote.example.com
 
 
 
-### ssh-keygen
+### `ssh-keygen`
 
 #### 创建一个 SSH key 
 
@@ -483,7 +562,7 @@ Generating public/private rsa key pair.
 
 
 
-### ssh-copy-id
+### `ssh-copy-id`
 
 ssh-copy-id命令可以把本地主机的公钥复制到远程主机的authorized_keys文件上
 
@@ -520,6 +599,58 @@ ssh-copy-id - 将你的公共密钥填充到一个远程机器上的authorized_k
 ### `lastb`
 
 查看登入失败的用户信息
+
+### `firewall-cmd`
+
+#### 控制端口开放
+
+```shell
+firewall-cmd --add-service=mysql # 开放mysql端口
+firewall-cmd --remove-service=http # 阻止http端口
+firewall-cmd --list-services  # 查看开放的服务
+firewall-cmd --add-port=3306/tcp # 开放通过tcp访问3306
+firewall-cmd --remove-port=80/tcp # 阻止通过tcp访问3306
+firewall-cmd --add-port=233/udp  # 开放通过udp访问233
+firewall-cmd --list-ports  # 查看开放的端口
+```
+
+
+
+#### 伪装IP
+
+```shell
+firewall-cmd --query-masquerade # 检查是否允许伪装IP
+firewall-cmd --add-masquerade # 允许防火墙伪装IP
+firewall-cmd --remove-masquerade# 禁止防火墙伪装IP
+```
+
+
+
+#### 开启端口转发
+
+1.开启伪装IP
+
+```shell
+firewall-cmd --permanent --add-masquerade
+```
+
+2.配置端口转发
+
+```shell
+# 将到达本机的12345端口的访问转发到另一台服务器的22端口
+firewall-cmd --permanent --add-forward-port=port=12345:proto=tcp:toaddr=192.168.172.131:toport=22
+
+# 将80端口的流量转发至8080
+firewall-cmd --add-forward-port=port=80:proto=tcp:toport=8080
+# 将80端口的流量转发至192.168.0.1的8080端口
+firewall-cmd --add-forward-port=port=80:proto=tcp:toaddr=192.168.0.1:toport=8080
+```
+
+3.重新载入使其生效
+
+```shell
+firewall-cmd --reload
+```
 
 
 

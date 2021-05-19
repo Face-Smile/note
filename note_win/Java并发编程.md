@@ -569,9 +569,249 @@ JDK 5.0 起提供了池相关API：ExecutorService 和 Exectors
 
 ### Executors
 
-工具类、线程池的工厂类，用于创建并返回不同类型的线程池。
+工具类、线程池的工厂类，用于创建并返回不同类型的线程池。Java通过Executors提供四种线程池：
+
+- `newCachedThreadPool`创建一个可缓存线程池，如果线程池的大小超过处理需求，可灵活回收空闲线程，若无空闲线程，则新建线程。
+- `newFixedThreadPool`创建一个可缓存线程池，如果线程池的大小超过处理需求，可灵活回收空闲线程，若无空闲线程，则新建线程。
+- `newScheduledThreadPool`创建一个定长线程池，支持定时及周期性执行任务
+- `newSingleThreadExecutor`创建一个单线程的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按指定顺序（FIFO，LIFO，优先级）执行。
 
 
+
+#### `newCachedThreadPool`
+
+创建一个可缓存线程池，如果线程池的大小超过处理需求，可灵活回收空闲线程，若无空闲线程，则新建线程。
+
+```java
+ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+for (int i = 0; i < 10; i++) {
+    final int index = i;
+    try {
+        Thread.sleep(index * 1000);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    cachedThreadPool.execute(new Runnable() {
+        public void run() {
+            System.out.println(index);
+        }
+    });
+}
+```
+
+线程池为无限大，当执行第二个任务时第一个任务已经完成，会复用执行第一个任务的线程，而不用每次新建线程。
+
+#### `newFixedThreadPool`
+
+创建一个可缓存线程池，如果线程池的大小超过处理需求，可灵活回收空闲线程，若无空闲线程，则新建线程。
+
+```java
+ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);  
+for (int i = 0; i < 10; i++) {  
+    final int index = i;  
+    fixedThreadPool.execute(new Runnable() {  
+        public void run() {  
+            try {  
+                System.out.println(index);  
+                Thread.sleep(2000);  
+            } catch (InterruptedException e) {  
+                e.printStackTrace();  
+            }  
+        }  
+    }); 
+}
+```
+
+因为线程池大小为3，每个任务输出index后sleep 2秒，所以每两秒打印3个数字。
+定长线程池的大小最好根据系统资源进行设置。如Runtime.getRuntime().availableProcessors()
+
+#### `newScheduledThreadPool`
+
+创建一个定长线程池，支持定时及周期性执行任务。
+
+##### `schedule`
+
+延迟指定时间后执行
+
+```java
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Queue;
+import java.util.concurrent.*;
+
+/**
+ * @author liuchj
+ * @version 1.0
+ * @className ScheduleThreadTest
+ * @description //TODO
+ * @date 2019/5/30
+ **/
+public class ScheduleThreadTest {
+    /**
+     * 线程安全的队列
+     */
+    static Queue<String> queue = new ConcurrentLinkedQueue<String>();
+
+    static {
+        //入队列
+        for (int i = 0; i < 9; i++) {
+            queue.add("task-" + i);
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        for (int i = 0; i < queue.size(); i++) {
+            ScheduledFuture<String> scheduledFuture = executorService.schedule(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    String value = ThreadPoolTask.queue.poll();
+                    if (value != "" && null != value) {
+                        System.out.println("时间:" + sdf.format(new Date())+"线程" + Thread.currentThread().getName() + " 执行了task: " + value);
+                    }
+                    return "call";
+                }
+            }, 3, TimeUnit.SECONDS);
+
+            System.out.println(scheduledFuture.get());
+        }
+
+        executorService.shutdown();
+    }
+}
+```
+
+```
+时间:2019-05-30 03:53:11线程pool-1-thread-1 执行了task: task-0
+call
+时间:2019-05-30 03:53:14线程pool-1-thread-1 执行了task: task-1
+call
+时间:2019-05-30 03:53:17线程pool-1-thread-1 执行了task: task-2
+call
+时间:2019-05-30 03:53:20线程pool-1-thread-1 执行了task: task-3
+call
+时间:2019-05-30 03:53:23线程pool-1-thread-1 执行了task: task-4
+call
+时间:2019-05-30 03:53:26线程pool-1-thread-1 执行了task: task-5
+call
+时间:2019-05-30 03:53:29线程pool-1-thread-1 执行了task: task-6
+call
+时间:2019-05-30 03:53:32线程pool-1-thread-1 执行了task: task-7
+call
+Disconnected from the target VM, address: '127.0.0.1:59247', transport: 'socket'
+时间:2019-05-30 03:53:35线程pool-1-thread-1 执行了task: task-8
+call
+```
+
+
+
+##### `scheduleAtFixedRate`
+
+`command`：执行的任务 Callable或Runnable接口实现类
+
+`initialDelay`：第一次执行任务延迟时间
+
+`period`：连续执行任务之间的周期，从上一个任务开始执行时计算延迟多少开始执行下一个任务，但是还会等上一个任务结束之后。
+`unit`：`initialDelay`和`period`时间单位
+
+```java
+ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(5);  
+scheduledThreadPool.scheduleAtFixedRate(new Runnable() {  
+    public void run() {  
+        System.out.println("delay 1 seconds, and excute every 3 seconds");  
+    }  
+}, 1, 3, TimeUnit.SECONDS);
+```
+
+
+
+##### `scheduleWithFixedDelay`
+
+`command`：执行的任务 Callable或Runnable接口实现类
+
+`initialDelay`：第一次执行任务延迟时间
+
+`period`：连续执行任务之间的周期，从上一个任务开始执行时计算延迟多少开始执行下一个任务，但是还会等上一个任务结束之后。
+`unit`：`initialDelay`和`period`时间单位
+
+```java
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Queue;
+import java.util.concurrent.*;
+
+
+public class ScheduledThreadTest {
+    /**
+         * 线程安全的队列
+         */
+    static Queue<String> queue = new ConcurrentLinkedQueue<String>();
+
+    static {
+        //入队列
+        for (int i = 0; i < 9; i++) {
+            queue.add("task-" + i);
+        }
+    }
+
+    public static void main(String[] args) {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        System.out.println("时间:" + sdf.format(new Date()) );
+        for (int i = 0; i < queue.size(); i++) {
+            executor.scheduleWithFixedDelay(new Runnable() {
+                @Override
+                public void run() {
+
+                    String value = ThreadPoolTask.queue.poll();
+                    if (value != "" && null != value) {
+                        System.out.println("时间:" + sdf.format(new Date())+" 线程" + Thread.currentThread().getName() + " 执行了task: " + value);
+                    }
+                    try {
+                        TimeUnit.SECONDS.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            },  2, 6, TimeUnit.SECONDS);
+
+        }
+        //这行代码不注释掉，任务都不能执行了，执行shutdown后就不能提交新任务了
+        //        executor.shutdown();
+    }
+}
+```
+
+
+
+##### `scheduleAtFixdRate`和`scheduleWithFixedDelay`区别
+
+scheduleAtFixedRate ，是以上一个任务开始的时间计时，`period`时间过去后，检测上一个任务是否执行完毕，如果上一个任务执行完毕，则当前任务立即执行，如果上一个任务没有执行完毕，则需要等上一个任务执行完毕后立即执行。
+
+scheduleWithFixedDelay，是以上一个任务结束时开始计时，`period`时间过去后，立即执行。
+
+
+
+#### `newSingleThreadExecutor`
+
+创建一个单线程化的线程池，他只会用唯一的工作线程来执行任务，保证所有任务案遭按照指定的顺序（FIFO，LIFO，优先级）执行。
+
+```java
+ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();  
+for (int i = 0; i < 10; i++) {  
+    final int index = i;  
+    singleThreadExecutor.execute(new Runnable() {  
+        public void run() {  
+            try {  
+                System.out.println(index);  
+                Thread.sleep(2000);  
+            } catch (InterruptedException e) {  
+                e.printStackTrace();  
+            }  
+        }  
+    })
+}
+```
 
 
 
@@ -584,7 +824,3 @@ JDK 5.0 起提供了池相关API：ExecutorService 和 Exectors
 > 在这里说明一点，countDownLatch不可能重新初始化或者修改CountDownLatch对象内部计数器的值，一个线程调用countdown方法，另外一个线程调用await方法
 
 
-
-
-
-## 
