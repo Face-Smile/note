@@ -360,6 +360,44 @@ ldd(选项)(参数)
 
 
 
+#### `who`
+
+查看登入信息以及记录
+
+`who /var/log/wtmp`: 打印所有登入成功历史 
+
+> 相关: `less /var/log/secure`查看所有ssh登入日志(包含失败)
+
+
+
+#### `watch`
+
+`watch`可以帮你监测一个命令的运行结果，来监测你想要的一切命令的结果变化
+
+```
+Usage:
+ watch [options] command
+
+Options:
+  -b, --beep             beep if command has a non-zero exit
+  -c, --color            interpret ANSI color and style sequences
+  -d, --differences[=<permanent>]
+                         highlight changes between updates
+  -e, --errexit          exit if command has a non-zero exit
+  -g, --chgexit          exit when output from command changes
+  -n, --interval <secs>  seconds to wait between updates
+  -p, --precise          attempt run command in precise intervals
+  -t, --no-title         turn off header
+  -x, --exec             pass command to exec instead of "sh -c"
+
+ -h, --help     display this help and exit
+ -v, --version  output version information and exit
+```
+
+
+
+
+
 ### `tr`
 
 字符串替换
@@ -534,6 +572,23 @@ $ ssh -R 6000:localhost:5000 remote.example.com
 ```
 
 现在，当在公司防火墙内的朋友打开浏览器时，他们可以进入 `http://remote.example.com:6000` 查看你的工作。就像在本地端口转发示例中一样，通信通过 ssh 会话安全地进行。
+
+
+
+#### ssh远程登入限制配置
+
+```shell
+# /etc/ssh/sshd_config
+PermitRootLogin no  # 禁止root用户登录
+PermitEmptyPasswords no # 禁止空密码登录
+PasswordAuthentication no  # 限制密码密码登录
+Match Address 192.168.184.8,202.54.1.1,192.168.1.0/24 
+	PermitRootLogin yes   #匹配到指定ip时，允许root登录
+Match User xiaoxiaoguai
+	PasswordAuthentication yes # 匹配用户xiaoxiaoguai允许密码登录
+```
+
+
 
 
 
@@ -911,6 +966,78 @@ if [[ $name =~ ^[0-9]+$]]; then
 
 
 
+### 登入相关日志
+
+
+
+
+#### `/var/log/auth.log`
+
+文本文件, 记录所有用户和用户认证相关的日志.无论是ssh登入,还是sudo执行命令都会在`auth.log`产生日志.
+
+
+
+#### `/var/run/utmp`
+
+二进制文件, 记录当前登入用户的每个用户信息,因此这个文件会随着用户登录和注销系统而不断变化，它只保留当时联机的用户记录，不会为用户保留永久的记录。系统中需要查询当前用户状态的程序，如 `who`、`w`、`users` 等命令就需要访问这个文件。
+
+
+
+#### `/var/log/wtmp`
+
+二进制文件, 记录的是所有失败的登录尝试，使用 `last` 命令及其 `-f` 选项可以查看这个文件的内容
+
+
+
+> `/var/run/utmp`、`/var/log/wtmp` 和 `/var/log/lastlog` 这三个文件，它们都是日志系统中的关键文件，并且具有如下的逻辑联系：
+> 当一个用户登录系统时，login 程序在 lastlog 文件中查看用户的 UID。如果该用户存在，就把该用户上次登录、注销的时间以及从哪个主机登录的信息写到标准输出中。然后 login 程序在 lastlog 中记录新的登录时间，并打开 utmp 文件添加用户本次的登录记录。接下来，login 程序打开 wtmp 文件并添加用户在 utmp 文件中的记录。当用户退出时会把更新的 utmp 文件中的记录添加到 wtmp 文件中，并从 utmp 文件中删除用户的记录。
+
+
+
+### 登入相关命令
+
+#### `lastlog`
+
+`lastlog` 命令用来显示系统中所有用户最近一次登陆的信息
+
+```
+选项:
+	-u <username>		查看某个用户的最后登入信息
+```
+
+> `lastlog` 命令就是从 `/var/log/lastlog` 文件中取出的内容
+
+
+
+#### `last`
+
+`last` 命令用来显示用户最近登录的信息。执行 last 命令，它会读取 `/var/log/wtmp` 文件的内容。并把该文件记录的用户登录历史全部显示出来.
+
+```
+选项:
+	-f	<filepath>	指定文件读取登入信息
+```
+
+> 注意: 系统中的`/var/log/wtmp`日志文件经常会被轮转，所以有时你需要显式的指定 `last` 命令从哪个文件中读取信息
+
+
+
+#### `who`
+
+`who` 命令通过查询 `/var/run/utmp` 文件来显式系统中当前登录的每个用户。默认的输出包括用户名、终端类型、登录日期及远程主机. `who` 也可指定文件查看登入信息
+
+
+
+#### `w`
+
+查询当前登入用户信息(包含最新执行的命令)
+
+
+
+`users`
+
+`users` 命令用单独的一行打印出当前登录的用户，每个显示的用户名对应一个登录会话。如果一个用户有不止一个登录会话，那他的用户名将显示多次
+
 ### 踩坑记
 
 #### 查询进程pid没有过滤进程本身
@@ -991,3 +1118,8 @@ ${file/dir/path}：将第一个dir 替换为path：/path1/dir2/dir3/my.file.txt
 
 ${file//dir/path}：将全部dir 替换为 path：/path1/path2/path3/my.file.txt
 
+
+
+
+
+## 
